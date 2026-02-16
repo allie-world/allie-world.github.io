@@ -2,222 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>portfolio</title>
-    
-    <script>
-        (function() {
-            const path = window.location.pathname;
-            if (path.endsWith('/index.html')) {
-                const cleanpath = path.replace('/index.html', '');
-                window.history.replaceState(null, '', cleanpath || '/');
-            }
-        })();
-    </script>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>resume</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png">
-    <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
     
     <style>
-        :root { --bg-color: #fce4ec; --text-color: #000; }
-        
-        html { 
-            background-color: var(--bg-color); 
-            height: -webkit-fill-available; 
-        }
-
-        body { 
+        body, html { 
             margin: 0; 
             padding: 0; 
-            width: 100%; 
-            height: 100vh;
-            height: -webkit-fill-available;
-            overflow: hidden; 
-            background-color: var(--bg-color); 
-            position: fixed; 
+            height: 100%; 
+            background-color: #fce4ec; 
+            font-family: "Courier New", monospace; 
             text-transform: lowercase; 
-            display: flex;
-            flex-direction: column;
+            overflow: hidden; 
         }
 
-        * { 
-            box-sizing: border-box; 
-            font-family: "Courier New", Courier, monospace; 
-            -webkit-tap-highlight-color: transparent; 
+        /* uses safe area insets to stay below the notch on mobile */
+        .resume-header { 
+            height: calc(60px + env(safe-area-inset-top)); 
+            display: flex; 
+            align-items: flex-end; 
+            padding: 0 20px 15px 20px; 
+            border-bottom: 1px solid #000; 
+            background-color: #fce4ec; 
+            z-index: 100;
+            position: relative;
         }
 
-        .header-name { 
-            position: absolute; 
-            top: 20px; 
-            left: 20px; 
-            font-size: 14px; 
+        .nav-back { 
+            text-decoration: none; 
+            color: #000; 
             font-weight: bold; 
-            z-index: 100; 
-            pointer-events: none; 
-        }
-
-        /* reset button in top right */
-        .reset-link {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            z-index: 1000; /* highest priority */
-            text-decoration: none;
-            color: #000;
             cursor: pointer;
         }
 
-        .reset-link:hover { text-decoration: underline; }
+        .nav-back:hover { text-decoration: underline; }
 
-        .desktop-container { 
-            flex: 1;
+        /* the container for the pdf */
+        .pdf-viewer { 
             width: 100%; 
-            position: relative; 
+            /* fills the space minus the header height */
+            height: calc(100% - (60px + env(safe-area-inset-top))); 
+            border: none; 
+            display: block;
         }
-
-        .icon-wrapper { 
-            position: absolute; 
-            width: 100px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            cursor: grab; 
-            touch-action: none; 
-            user-select: none; 
-            z-index: 500; /* high z-index to stay above footer */
-            visibility: hidden; 
-        }
-
-        .icon-wrapper.dragging a { pointer-events: none; }
-
-        .icon-link { 
-            text-decoration: none; 
-            color: var(--text-color); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-        }
-
-        .icon-img { width: 50px; height: auto; margin-bottom: 8px; -webkit-user-drag: none; }
-        .icon-label { font-size: 11px; text-align: center; font-weight: bold; }
-
-        .footer { 
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%; 
-            height: calc(60px + env(safe-area-inset-bottom));
-            padding-bottom: env(safe-area-inset-bottom);
-            border-top: 1px solid #000; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 15px; 
-            background-color: var(--bg-color); 
-            z-index: 100; /* lower than icons */
-        }
-
-        .footer a, .footer span { text-decoration: none; color: #000; font-size: 12px; font-weight: bold; }
-        .footer a:hover { text-decoration: underline; }
-
-        #projects-icon { top: 15%; left: 5%; }
-        #resume-icon   { top: 32%; left: 15%; }
-        #about-icon    { top: 48%; left: 60%; }
-        #contact-icon  { top: 18%; left: 78%; }
     </style>
 </head>
 <body>
 
-    <div class="header-name">allie swarr</div>
-    <a href="#" class="reset-link" onclick="resetpositions(event)">reset</a>
-
-    <div class="desktop-container">
-        <div id="projects-icon" class="icon-wrapper draggable">
-            <a href="/projects" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="icon-img" alt="projects">
-                <span class="icon-label">projects</span>
-            </a>
-        </div>
-
-        <div id="resume-icon" class="icon-wrapper draggable">
-            <a href="/resume" target="_blank" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/certificate_seal.png" class="icon-img" alt="resume">
-                <span class="icon-label">resume</span>
-            </a>
-        </div>
-
-        <div id="about-icon" class="icon-wrapper draggable">
-            <a href="/about" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/address_book_user.png" class="icon-img" alt="about">
-                <span class="icon-label">about me</span>
-            </a>
-        </div>
-
-        <div id="contact-icon" class="icon-wrapper draggable">
-            <a href="/contact" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/mail.png" class="icon-img" alt="contact">
-                <span class="icon-label">contact</span>
-            </a>
-        </div>
+    <div class="resume-header">
+        <a href="/" class="nav-back">←</a>
     </div>
 
-    <footer class="footer">
-        <a href="https://www.linkedin.com/in/allie-swarr" target="_blank">linkedin</a>
-        <span>/</span>
-        <a href="https://github.com/allie-world" target="_blank">github</a>
-    </footer>
+    <iframe src="/allieresume.pdf#view=fitW" class="pdf-viewer"></iframe>
 
-    <script>
-        function saveposition(id, x, y) {
-            localStorage.setItem(`pos_${id}`, JSON.stringify({x, y}));
-        }
-
-        function resetpositions(e) {
-            e.preventDefault();
-            const wrappers = document.querySelectorAll('.icon-wrapper');
-            wrappers.forEach(wrapper => {
-                localStorage.removeItem(`pos_${wrapper.id}`);
-            });
-            window.location.reload();
-        }
-
-        function loadpositions() {
-            const wrappers = document.querySelectorAll('.icon-wrapper');
-            wrappers.forEach(wrapper => {
-                const saved = localStorage.getItem(`pos_${wrapper.id}`);
-                if (saved) {
-                    const {x, y} = JSON.parse(saved);
-                    wrapper.style.transform = `translate(${x}px, ${y}px)`;
-                    wrapper.setAttribute('data-x', x);
-                    wrapper.setAttribute('data-y', y);
-                }
-                wrapper.style.visibility = 'visible';
-            });
-        }
-
-        interact('.draggable').draggable({
-            inertia: true,
-            listeners: {
-                start (event) { event.target.classList.add('dragging'); },
-                move (event) {
-                    var target = event.target;
-                    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
-                    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-                    target.style.transform = `translate(${x}px, ${y}px)`;
-                    target.setAttribute('data-x', x);
-                    target.setAttribute('data-y', y);
-                },
-                end (event) { 
-                    const target = event.target;
-                    saveposition(target.id, target.getAttribute('data-x'), target.getAttribute('data-y'));
-                    setTimeout(() => { target.classList.remove('dragging'); }, 100); 
-                }
-            }
-        });
-
-        window.onload = loadpositions;
-    </script>
 </body>
 </html>
