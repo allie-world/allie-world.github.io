@@ -67,7 +67,6 @@
             touch-action: none; 
             user-select: none; 
             z-index: 10; 
-            /* initial hidden state to prevent flash before position load */
             visibility: hidden; 
         }
 
@@ -102,7 +101,6 @@
         .footer a, .footer span { text-decoration: none; color: #000; font-size: 12px; font-weight: bold; }
         .footer a:hover { text-decoration: underline; }
 
-        /* default positions for first-time visitors */
         #projects-icon { top: 15%; left: 5%; }
         #resume-icon   { top: 32%; left: 15%; }
         #about-icon    { top: 48%; left: 60%; }
@@ -122,7 +120,7 @@
         </div>
 
         <div id="resume-icon" class="icon-wrapper draggable">
-            <a href="/resume" target="_blank" class="icon-link">
+            <a href="/allieresume.pdf" target="_blank" class="icon-link">
                 <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/certificate_seal.png" class="icon-img" alt="resume">
                 <span class="icon-label">resume</span>
             </a>
@@ -150,7 +148,6 @@
     </footer>
 
     <script>
-        // localstorage persistence logic
         function saveposition(id, x, y) {
             localStorage.setItem(`pos_${id}`, JSON.stringify({x, y}));
         }
@@ -165,7 +162,7 @@
                     wrapper.setAttribute('data-x', x);
                     wrapper.setAttribute('data-y', y);
                 }
-                wrapper.style.visibility = 'visible'; // reveal after loading
+                wrapper.style.visibility = 'visible';
             });
         }
 
