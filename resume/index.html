@@ -19,7 +19,6 @@
             overflow: hidden; 
         }
 
-        /* tight header with no extra top padding */
         .resume-header { 
             height: 60px; 
             display: flex; 
@@ -47,7 +46,6 @@
             font-size: 13px;
         }
 
-        /* show download button only on mobile */
         @media (max-width: 768px) {
             .mobile-download {
                 display: block;
@@ -56,9 +54,12 @@
 
         .pdf-container {
             width: 100%;
+            /* fills remaining height */
             height: calc(100% - 61px);
-            overflow: auto;
-            -webkit-overflow-scrolling: touch;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            background-color: var(--bg-color);
         }
 
         .pdf-viewer { 
@@ -72,13 +73,13 @@
 <body>
 
     <div class="resume-header">
-        <a href="/" class="nav-back">← desktop</a>
+        <a href="/" class="nav-back">←</a>
         <a href="/allieresume.pdf" download class="mobile-download">download pdf</a>
     </div>
 
     <div class="pdf-container">
-        <object data="/allieresume.pdf#view=FitH" type="application/pdf" class="pdf-viewer">
-            <embed src="/allieresume.pdf#view=FitH" type="application/pdf" />
+        <object data="/allieresume.pdf#view=Fit" type="application/pdf" class="pdf-viewer">
+            <embed src="/allieresume.pdf#view=Fit" type="application/pdf" />
         </object>
     </div>
 
