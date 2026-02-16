@@ -20,6 +20,7 @@
             position: absolute; top: 20px; left: 20px; 
             text-decoration: none; color: #000; font-weight: bold; z-index: 1000; 
         }
+        .nav-back:hover { text-decoration: none; }
 
         /* scattered project launchers */
         .project-launcher {
@@ -30,7 +31,7 @@
 
         /* the desktop windows */
         .window {
-            position: absolute; width: 300px; background: var(--bg-color);
+            position: absolute; width: 320px; background: var(--bg-color);
             border: var(--border); display: none; flex-direction: column;
             box-shadow: 4px 4px 0px #000; z-index: 100; touch-action: none;
         }
@@ -42,54 +43,55 @@
         }
 
         .close-btn { cursor: pointer; font-weight: bold; border: var(--border); padding: 0 5px; background: #eee; }
+        .close-btn:hover { background: #ddd; }
 
-        .window-content { padding: 15px; overflow-y: auto; max-height: 400px; }
+        .window-content { padding: 15px; overflow-y: auto; max-height: 450px; }
         
-        .project-media { width: 100%; height: auto; border: var(--border); margin-bottom: 10px; }
-        .project-blurb { font-size: 13px; line-height: 1.4; }
+        .project-media { width: 100%; height: auto; border: var(--border); margin-bottom: 12px; }
+        .project-blurb { font-size: 13px; line-height: 1.5; }
 
-        /* initial scattered positions for launchers */
-        #launch-jenkins { top: 20%; left: 15%; }
-        #launch-mypy    { top: 45%; left: 10%; }
-        #launch-piles   { top: 15%; left: 60%; }
-        #launch-korea   { top: 60%; left: 70%; }
+        /* scattered positions for launchers */
+        #launch-1 { top: 15%; left: 10%; }
+        #launch-2 { top: 55%; left: 15%; }
+        #launch-3 { top: 25%; left: 65%; }
+        #launch-4 { top: 65%; left: 60%; }
     </style>
 </head>
 <body>
 
     <a href="/" class="nav-back">←</a>
 
-    <div id="launch-jenkins" class="project-launcher" onclick="openWindow('win-jenkins')">bamboo to jenkins migration</div>
-    <div id="launch-mypy" class="project-launcher" onclick="openWindow('win-mypy')">mypy rollout (rbizdev)</div>
-    <div id="launch-piles" class="project-launcher" onclick="openWindow('win-piles')">internal tool: "piles"</div>
-    <div id="launch-korea" class="project-launcher" onclick="openWindow('win-korea')">global reporting: korea/china/europe</div>
+    <div id="launch-1" class="project-launcher" onclick="openWindow('win-1')">social media campaign</div>
+    <div id="launch-2" class="project-launcher" onclick="openWindow('win-2')">brand identity refresh</div>
+    <div id="launch-3" class="project-launcher" onclick="openWindow('win-3')">content strategy v1</div>
+    <div id="launch-4" class="project-launcher" onclick="openWindow('win-4')">event marketing lead</div>
 
-    <div id="win-jenkins" class="window draggable-window">
-        <div class="window-header"><span>migration.txt</span><div class="close-btn" onclick="closeWindow('win-jenkins')">x</div></div>
+    <div id="win-1" class="window draggable-window">
+        <div class="window-header"><span>campaign.png</span><div class="close-btn" onclick="closeWindow('win-1')">x</div></div>
         <div class="window-content">
             <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/classic-windows-xp-desktop-wallpapers-v0-gqevqkeqwbxb1.webp" class="project-media">
-            <div class="project-blurb">led the infrastructure migration from bamboo to jenkins for core hrt deployment pipelines.</div>
+            <div class="project-blurb">overview: detailed summary of the marketing campaign goals, platforms used, and key performance indicators.</div>
         </div>
     </div>
 
-    <div id="win-mypy" class="window draggable-window">
-        <div class="window-header"><span>static_typing.exe</span><div class="close-btn" onclick="closeWindow('win-mypy')">x</div></div>
+    <div id="win-2" class="window draggable-window">
+        <div class="window-header"><span>branding.txt</span><div class="close-btn" onclick="closeWindow('win-2')">x</div></div>
         <div class="window-content">
-            <div class="project-blurb">spearheaded the mypy static type checking rollout for the rbizdev repo to improve codebase stability.</div>
+            <div class="project-blurb">overview: a description of the brand evolution, creative direction, and how it aligns with the hrt mission.</div>
         </div>
     </div>
 
-    <div id="win-piles" class="window draggable-window">
-        <div class="window-header"><span>piles_v1.sys</span><div class="close-btn" onclick="closeWindow('win-piles')">x</div></div>
+    <div id="win-3" class="window draggable-window">
+        <div class="window-header"><span>strategy.doc</span><div class="close-btn" onclick="closeWindow('win-3')">x</div></div>
         <div class="window-content">
-            <div class="project-blurb">designed and developed "piles" and "advanced search v1" internal tools at hrt.</div>
+            <div class="project-blurb">overview: outline of the editorial calendar, target audience research, and engagement growth strategies.</div>
         </div>
     </div>
 
-    <div id="win-korea" class="window draggable-window">
-        <div class="window-header"><span>intl_reporting.cfg</span><div class="close-btn" onclick="closeWindow('win-korea')">x</div></div>
+    <div id="win-4" class="window draggable-window">
+        <div class="window-header"><span>events.exe</span><div class="close-btn" onclick="closeWindow('win-4')">x</div></div>
         <div class="window-content">
-            <div class="project-blurb">implemented bitemporal tracking database models for global reporting configurations across korea, china, and europe.</div>
+            <div class="project-blurb">overview: execution details for internal or external events, including vendor management and lead generation results.</div>
         </div>
     </div>
 
@@ -100,10 +102,11 @@
             const win = document.getElementById(id);
             win.style.display = 'flex';
             win.style.zIndex = ++topZIndex;
-            // center it initially if no position set
-            if (!win.style.top) {
-                win.style.top = '25%';
-                win.style.left = '30%';
+            
+            // set initial center-ish position if not dragged yet
+            if (!win.style.top && !win.getAttribute('data-x')) {
+                win.style.top = '20%';
+                win.style.left = '35%';
             }
         }
 
@@ -129,6 +132,5 @@
     </script>
 </body>
 </html>
-
 
 
