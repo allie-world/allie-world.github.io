@@ -5,21 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>projects</title>
     <style>
-        body { background-color: #fce4ec; color: #000; font-family: "Courier New", monospace; padding: 20px; text-transform: lowercase; margin: 0; }
-        .nav-back { text-decoration: none; color: #000; font-weight: bold; display: block; margin-bottom: 40px; cursor: pointer; }
+        body { 
+            background-color: #fce4ec; 
+            color: #000; 
+            font-family: "Courier New", monospace; 
+            padding: 20px; 
+            text-transform: lowercase; 
+            margin: 0; 
+        }
+        .nav-back { 
+            text-decoration: none; 
+            color: #000; 
+            font-weight: bold; 
+            display: block; 
+            margin-bottom: 40px; 
+            cursor: pointer; 
+        }
         .nav-back:hover { text-decoration: underline; }
         .content { max-width: 800px; }
         .project-item { margin-bottom: 50px; }
-        .project-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
-        .project-desc { font-size: 14px; line-height: 1.5; }
+        .project-title { 
+            font-size: 18px; 
+            font-weight: bold; 
+            margin-bottom: 15px; 
+        }
+        .project-desc { 
+            font-size: 14px; 
+            line-height: 1.5; 
+            margin-bottom: 20px; 
+        }
+        /* responsive image styling */
+        .project-img { 
+            max-width: 100%; 
+            height: auto; 
+            display: block; 
+            border: 1px solid #000; 
+        }
     </style>
 </head>
 <body>
     <a href="/" class="nav-back">← desktop</a>
+    
     <div class="content">
         <div class="project-item">
             <div class="project-title">[project title]</div>
             <div class="project-desc">[project description and tech stack.]</div>
+            <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/classic-windows-xp-desktop-wallpapers-v0-gqevqkeqwbxb1.webp" 
+                 class="project-img" 
+                 alt="placeholder image">
         </div>
     </div>
 </body>
