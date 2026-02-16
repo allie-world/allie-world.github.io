@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Personal Portfolio 3</title>
+    <title>portfolio</title>
     <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
     <style>
         :root {
@@ -11,7 +11,6 @@
             --text-color: #000;
         }
 
-        /* Lock the viewport to prevent all scrolling */
         html, body {
             margin: 0;
             padding: 0;
@@ -19,25 +18,34 @@
             height: 100%;
             overflow: hidden; 
             background-color: var(--bg-color);
-            position: fixed; /* Prevents "bounce" scrolling on iOS */
+            position: fixed;
+            text-transform: lowercase;
         }
 
         * {
             box-sizing: border-box;
             font-family: "Courier New", Courier, monospace;
-            -webkit-tap-highlight-color: transparent; /* Removes blue flash on tap */
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Desktop/Absolute Layout */
+        /* container to hold icons */
+        .desktop-container {
+            width: 100%;
+            height: calc(100% - 60px);
+            position: relative;
+        }
+
         .icon-wrapper {
             position: absolute;
-            width: 90px;
+            width: 100px;
             display: flex;
             flex-direction: column;
             align-items: center;
             cursor: grab;
-            touch-action: none; /* Required for Interact.js */
+            /* crucial for mobile dragging */
+            touch-action: none; 
             user-select: none;
+            z-index: 10;
         }
 
         .icon-wrapper.dragging a {
@@ -50,24 +58,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            cursor: pointer;
         }
 
         .icon-img {
             width: 50px;
             height: auto;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             -webkit-user-drag: none;
         }
 
         .icon-label {
-            font-size: 10px;
+            font-size: 11px;
             text-align: center;
             font-weight: bold;
-            text-transform: uppercase;
-            white-space: nowrap;
         }
 
-        /* Bottom Nav */
+        /* bottom navigation */
         .footer {
             position: absolute;
             bottom: 0;
@@ -77,41 +84,23 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 25px;
+            gap: 15px;
             background-color: var(--bg-color);
             z-index: 100;
         }
 
-        .footer a {
+        .footer a, .footer span {
             text-decoration: none;
             color: #000;
-            font-size: 11px;
+            font-size: 12px;
             font-weight: bold;
         }
 
-        /* Default Placement for Desktop */
+        /* default folder positions */
         #projects-icon { top: 10%; left: 10%; }
         #resume-icon   { top: 25%; left: 10%; }
         #about-icon    { top: 40%; left: 10%; }
         #contact-icon  { top: 55%; left: 10%; }
-
-        /* Mobile Specific Layout */
-        @media (max-width: 600px) {
-            .desktop-container {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                padding: 40px 20px;
-                gap: 20px;
-            }
-
-            .icon-wrapper {
-                position: relative !important; /* Disable absolute on mobile */
-                top: auto !important;
-                left: auto !important;
-                transform: none !important;
-                width: 100%;
-            }
-        }
     </style>
 </head>
 <body>
@@ -119,68 +108,71 @@
     <div class="desktop-container">
         <div id="projects-icon" class="icon-wrapper draggable">
             <a href="projects.html" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="icon-img" alt="Projects">
-                <span class="icon-label">PROJECTS</span>
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="icon-img" alt="projects">
+                <span class="icon-label">projects</span>
             </a>
         </div>
 
         <div id="resume-icon" class="icon-wrapper draggable">
             <a href="resume.html" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/certificate_seal.png" class="icon-img" alt="Resume">
-                <span class="icon-label">RESUME</span>
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/certificate_seal.png" class="icon-img" alt="resume">
+                <span class="icon-label">resume</span>
             </a>
         </div>
 
         <div id="about-icon" class="icon-wrapper draggable">
             <a href="about.html" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/address_book_user.png" class="icon-img" alt="About">
-                <span class="icon-label">ABOUT ME</span>
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/address_book_user.png" class="icon-img" alt="about">
+                <span class="icon-label">about me</span>
             </a>
         </div>
 
         <div id="contact-icon" class="icon-wrapper draggable">
             <a href="contact.html" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="icon-img" alt="Contact">
-                <span class="icon-label">CONTACT</span>
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="icon-img" alt="contact">
+                <span class="icon-label">contact</span>
             </a>
         </div>
     </div>
 
     <footer class="footer">
-        <a href="#" target="_blank">LINKEDIN</a>
-        <a href="https://github.com/allie-world" target="_blank">GITHUB</a>
+        <a href="https://linkedin.com/" target="_blank">linkedin</a>
+        <span>/</span>
+        <a href="https://github.com/allie-world" target="_blank">github</a>
+        <span>/</span>
+        <a href="https://oklama.com" target="_blank">oklama</a>
     </footer>
 
     <script>
         interact('.draggable').draggable({
-            // Only enable dragging on desktop (screens wider than 600px)
-            enabled: window.innerWidth > 600,
+            // enabled for both mouse and touch
+            inertia: true,
             listeners: {
                 start (event) {
                     event.target.classList.add('dragging');
                 },
                 move (event) {
                     var target = event.target;
+                    // keep the dragged position in the data-x/data-y attributes
                     var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
                     var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
+                    // translate the element
                     target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+
+                    // update the posiion attributes
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
                 },
                 end (event) {
+                    // delay removing the class so the click event is suppressed correctly
                     setTimeout(() => {
                         event.target.classList.remove('dragging');
-                    }, 50);
+                    }, 100);
                 }
-            }
-        });
-
-        // Optional: Re-check screen size on resize
-        window.addEventListener('resize', () => {
-            interact('.draggable').draggable({
-                enabled: window.innerWidth > 600
-            });
+            },
+            // prevent scrolling while dragging on mobile
+            hold: 0 
         });
     </script>
 </body>
