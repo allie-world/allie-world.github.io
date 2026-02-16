@@ -2,26 +2,133 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>projects</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png">
+    <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
+    
     <style>
-        body { background-color: #fce4ec; color: #000; font-family: "Courier New", monospace; padding: 20px; text-transform: lowercase; margin: 0; min-height: 100vh;}
-        .nav-back { text-decoration: none; color: #000; font-weight: bold; display: block; margin-bottom: 40px; }
-        .content { max-width: 800px; }
-        .project-item { margin-bottom: 50px; }
-        .project-title { font-size: 18px; font-weight: bold; margin-bottom: 10px; }
-        .project-img { max-width: 100%; height: auto; display: block; border: 1px solid #000; margin-top: 15px; }
+        :root { --bg-color: #fce4ec; --border: 1px solid #000; }
+        
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            background-color: var(--bg-color); font-family: "Courier New", monospace; 
+            text-transform: lowercase; overflow: hidden; position: fixed;
+        }
+
+        .nav-back { 
+            position: absolute; top: 20px; left: 20px; 
+            text-decoration: none; color: #000; font-weight: bold; z-index: 1000; 
+        }
+
+        /* scattered project launchers */
+        .project-launcher {
+            position: absolute; cursor: pointer; font-weight: bold;
+            padding: 5px; z-index: 10;
+        }
+        .project-launcher:hover { text-decoration: underline; }
+
+        /* the desktop windows */
+        .window {
+            position: absolute; width: 300px; background: var(--bg-color);
+            border: var(--border); display: none; flex-direction: column;
+            box-shadow: 4px 4px 0px #000; z-index: 100; touch-action: none;
+        }
+
+        .window-header {
+            padding: 5px 10px; border-bottom: var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: grab; background: #fff;
+        }
+
+        .close-btn { cursor: pointer; font-weight: bold; border: var(--border); padding: 0 5px; background: #eee; }
+
+        .window-content { padding: 15px; overflow-y: auto; max-height: 400px; }
+        
+        .project-media { width: 100%; height: auto; border: var(--border); margin-bottom: 10px; }
+        .project-blurb { font-size: 13px; line-height: 1.4; }
+
+        /* initial scattered positions for launchers */
+        #launch-jenkins { top: 20%; left: 15%; }
+        #launch-mypy    { top: 45%; left: 10%; }
+        #launch-piles   { top: 15%; left: 60%; }
+        #launch-korea   { top: 60%; left: 70%; }
     </style>
 </head>
 <body>
+
     <a href="/" class="nav-back">←</a>
-    <div class="content">
-        <div class="project-item">
-            <div class="project-title">Ask an Intern | Creative Producer</div></br> Senior Video Producer: Jason Jenkins</br>
-            <div class="project-description">Intern content is notoriously stale. I pitched a reimagining of the typical intern interview format, drawing inspiration from high-fashion editorial interviews to strip away the corporate veneer.</br>The goal was something that felt delightfully watchable and quietly informative. I developed a narrative arc and questions designed to share key details about what makes algorithm development at HRT unique, without ever feeling like a lecture.</div>
-           <iframe width="560" height="315" src="https://www.youtube.com/embed/feeIwfM_vVs?si=L_dwkFCWGo3lvxSX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+    <div id="launch-jenkins" class="project-launcher" onclick="openWindow('win-jenkins')">bamboo to jenkins migration</div>
+    <div id="launch-mypy" class="project-launcher" onclick="openWindow('win-mypy')">mypy rollout (rbizdev)</div>
+    <div id="launch-piles" class="project-launcher" onclick="openWindow('win-piles')">internal tool: "piles"</div>
+    <div id="launch-korea" class="project-launcher" onclick="openWindow('win-korea')">global reporting: korea/china/europe</div>
+
+    <div id="win-jenkins" class="window draggable-window">
+        <div class="window-header"><span>migration.txt</span><div class="close-btn" onclick="closeWindow('win-jenkins')">x</div></div>
+        <div class="window-content">
+            <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/classic-windows-xp-desktop-wallpapers-v0-gqevqkeqwbxb1.webp" class="project-media">
+            <div class="project-blurb">led the infrastructure migration from bamboo to jenkins for core hrt deployment pipelines.</div>
         </div>
     </div>
+
+    <div id="win-mypy" class="window draggable-window">
+        <div class="window-header"><span>static_typing.exe</span><div class="close-btn" onclick="closeWindow('win-mypy')">x</div></div>
+        <div class="window-content">
+            <div class="project-blurb">spearheaded the mypy static type checking rollout for the rbizdev repo to improve codebase stability.</div>
+        </div>
+    </div>
+
+    <div id="win-piles" class="window draggable-window">
+        <div class="window-header"><span>piles_v1.sys</span><div class="close-btn" onclick="closeWindow('win-piles')">x</div></div>
+        <div class="window-content">
+            <div class="project-blurb">designed and developed "piles" and "advanced search v1" internal tools at hrt.</div>
+        </div>
+    </div>
+
+    <div id="win-korea" class="window draggable-window">
+        <div class="window-header"><span>intl_reporting.cfg</span><div class="close-btn" onclick="closeWindow('win-korea')">x</div></div>
+        <div class="window-content">
+            <div class="project-blurb">implemented bitemporal tracking database models for global reporting configurations across korea, china, and europe.</div>
+        </div>
+    </div>
+
+    <script>
+        let topZIndex = 100;
+
+        function openWindow(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'flex';
+            win.style.zIndex = ++topZIndex;
+            // center it initially if no position set
+            if (!win.style.top) {
+                win.style.top = '25%';
+                win.style.left = '30%';
+            }
+        }
+
+        function closeWindow(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        interact('.draggable-window').draggable({
+            allowFrom: '.window-header',
+            inertia: true,
+            listeners: {
+                start(event) { event.target.style.zIndex = ++topZIndex; },
+                move(event) {
+                    const target = event.target;
+                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                }
+            }
+        });
+    </script>
 </body>
 </html>
+
+
+
