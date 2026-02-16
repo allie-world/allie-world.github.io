@@ -16,16 +16,18 @@
     </script>
 
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png">
-    
     <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
     
     <style>
         :root { --bg-color: #fce4ec; --text-color: #000; }
         
-        html, body { 
+        html { background-color: var(--bg-color); }
+
+        body { 
             margin: 0; 
             padding: 0; 
             width: 100%; 
+            min-height: 100vh;
             height: 100%; 
             overflow: hidden; 
             background-color: var(--bg-color); 
@@ -65,6 +67,8 @@
             touch-action: none; 
             user-select: none; 
             z-index: 10; 
+            /* initial hidden state to prevent flash before position load */
+            visibility: hidden; 
         }
 
         .icon-wrapper.dragging a { pointer-events: none; }
@@ -78,18 +82,8 @@
             cursor: pointer; 
         }
 
-        .icon-img { 
-            width: 50px; 
-            height: auto; 
-            margin-bottom: 8px; 
-            -webkit-user-drag: none; 
-        }
-
-        .icon-label { 
-            font-size: 11px; 
-            text-align: center; 
-            font-weight: bold; 
-        }
+        .icon-img { width: 50px; height: auto; margin-bottom: 8px; -webkit-user-drag: none; }
+        .icon-label { font-size: 11px; text-align: center; font-weight: bold; }
 
         .footer { 
             position: absolute; 
@@ -105,16 +99,10 @@
             z-index: 100; 
         }
 
-        .footer a, .footer span { 
-            text-decoration: none; 
-            color: #000; 
-            font-size: 12px; 
-            font-weight: bold; 
-        }
-
+        .footer a, .footer span { text-decoration: none; color: #000; font-size: 12px; font-weight: bold; }
         .footer a:hover { text-decoration: underline; }
 
-        /* scattered initial positions */
+        /* default positions for first-time visitors */
         #projects-icon { top: 15%; left: 5%; }
         #resume-icon   { top: 32%; left: 15%; }
         #about-icon    { top: 48%; left: 60%; }
@@ -162,6 +150,25 @@
     </footer>
 
     <script>
+        // localstorage persistence logic
+        function saveposition(id, x, y) {
+            localStorage.setItem(`pos_${id}`, JSON.stringify({x, y}));
+        }
+
+        function loadpositions() {
+            const wrappers = document.querySelectorAll('.icon-wrapper');
+            wrappers.forEach(wrapper => {
+                const saved = localStorage.getItem(`pos_${wrapper.id}`);
+                if (saved) {
+                    const {x, y} = JSON.parse(saved);
+                    wrapper.style.transform = `translate(${x}px, ${y}px)`;
+                    wrapper.setAttribute('data-x', x);
+                    wrapper.setAttribute('data-y', y);
+                }
+                wrapper.style.visibility = 'visible'; // reveal after loading
+            });
+        }
+
         interact('.draggable').draggable({
             inertia: true,
             listeners: {
@@ -170,19 +177,20 @@
                     var target = event.target;
                     var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
                     var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
-
-                    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+                    target.style.transform = `translate(${x}px, ${y}px)`;
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
                 },
                 end (event) { 
-                    setTimeout(() => { 
-                        event.target.classList.remove('dragging'); 
-                    }, 100); 
+                    const target = event.target;
+                    saveposition(target.id, target.getAttribute('data-x'), target.getAttribute('data-y'));
+                    setTimeout(() => { target.classList.remove('dragging'); }, 100); 
                 }
             },
             hold: 0 
         });
+
+        window.onload = loadpositions;
     </script>
 </body>
 </html>
