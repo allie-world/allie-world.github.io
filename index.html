@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Personal Portfolio</title>
+    <title>Personal Portfolio 2</title>
     <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
     <style>
         :root {
-            --bg-color: #fce4ec; /* Light Pink */
+            --bg-color: #fce4ec;
             --text-color: #000;
         }
 
@@ -23,12 +23,9 @@
             height: 100vh;
             width: 100vw;
             overflow: hidden;
-            display: flex;
-            flex-direction: column;
             position: relative;
         }
 
-        /* Draggable Wrapper */
         .icon-wrapper {
             position: absolute;
             width: 90px;
@@ -40,13 +37,17 @@
             user-select: none;
         }
 
+        /* This prevents the link from being triggered during a drag */
+        .icon-wrapper.dragging a {
+            pointer-events: none;
+        }
+
         .icon-link {
             text-decoration: none;
             color: var(--text-color);
             display: flex;
             flex-direction: column;
             align-items: center;
-            pointer-events: auto;
         }
 
         .folder-svg {
@@ -62,7 +63,6 @@
             text-transform: uppercase;
         }
 
-        /* Footer Navigation */
         .footer {
             position: absolute;
             bottom: 0;
@@ -73,7 +73,6 @@
             justify-content: center;
             align-items: center;
             gap: 30px;
-            background: rgba(255, 255, 255, 0.1);
         }
 
         .footer a {
@@ -81,87 +80,61 @@
             color: #000;
             font-size: 12px;
             font-weight: bold;
-            letter-spacing: 1px;
         }
 
-        .footer a:hover {
-            text-decoration: underline;
-        }
-
-        /* Default Placement */
+        /* Initial Positions */
         #projects-icon { top: 10%; left: 10%; }
         #resume-icon   { top: 25%; left: 10%; }
         #about-icon    { top: 40%; left: 10%; }
         #contact-icon  { top: 55%; left: 10%; }
-
-        /* Mobile View - Snap to grid */
-        @media (max-width: 600px) {
-            .icon-wrapper {
-                position: static !important;
-                transform: none !important;
-                width: 100%;
-            }
-            .desktop-grid {
-                display: grid;
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
-                padding: 40px 20px;
-            }
-        }
     </style>
 </head>
 <body>
 
-    <div class="desktop-grid">
-        <div id="projects-icon" class="icon-wrapper draggable">
-            <a href="projects.html" class="icon-link" draggable="false">
-                <svg class="folder-svg" viewBox="0 0 24 24" fill="black"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-                <span class="icon-label">PROJECTS</span>
-            </a>
-        </div>
+    <div id="projects-icon" class="icon-wrapper draggable">
+        <a href="projects.html" class="icon-link">
+            <svg class="folder-svg" viewBox="0 0 24 24" fill="black"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+            <span class="icon-label">PROJECTS</span>
+        </a>
+    </div>
 
-        <div id="resume-icon" class="icon-wrapper draggable">
-            <a href="resume.html" class="icon-link" draggable="false">
-                <svg class="folder-svg" viewBox="0 0 24 24" fill="black"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-                <span class="icon-label">RESUME</span>
-            </a>
-        </div>
-
-        <div id="about-icon" class="icon-wrapper draggable">
-            <a href="about.html" class="icon-link" draggable="false">
-                <svg class="folder-svg" viewBox="0 0 24 24" fill="black"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-                <span class="icon-label">ABOUT</span>
-            </a>
-        </div>
-
-        <div id="contact-icon" class="icon-wrapper draggable">
-            <a href="contact.html" class="icon-link" draggable="false">
-                <svg class="folder-svg" viewBox="0 0 24 24" fill="black"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-                <span class="icon-label">CONTACT</span>
-            </a>
-        </div>
+    <div id="resume-icon" class="icon-wrapper draggable">
+        <a href="resume.html" class="icon-link">
+            <svg class="folder-svg" viewBox="0 0 24 24" fill="black"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+            <span class="icon-label">RESUME</span>
+        </a>
     </div>
 
     <footer class="footer">
-        <a href="https://linkedin.com/" target="_blank">LINKEDIN</a>
-        <a href="https://github.com/" target="_blank">GITHUB</a>
+        <a href="#">LINKEDIN</a>
+        <a href="#">GITHUB</a>
     </footer>
 
     <script>
         interact('.draggable').draggable({
             listeners: {
+                start (event) {
+                    // Add a class to indicate dragging started
+                    event.target.classList.add('dragging');
+                },
                 move (event) {
-                    var target = event.target
-                    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
-                    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+                    var target = event.target;
+                    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-                    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
-
-                    target.setAttribute('data-x', x)
-                    target.setAttribute('data-y', y)
+                    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                },
+                end (event) {
+                    // Short timeout to ensure the 'click' event 
+                    // doesn't fire immediately after the drag ends
+                    setTimeout(() => {
+                        event.target.classList.remove('dragging');
+                    }, 50);
                 }
             }
-        })
+        });
     </script>
 </body>
 </html>
