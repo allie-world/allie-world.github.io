@@ -38,9 +38,15 @@
             cursor: pointer;
         }
 
-        .nav-back:hover, .mobile-download:hover { text-decoration: underline; }
+        /* removed the underline on hover */
+        .nav-back:hover { 
+            text-decoration: none; 
+        }
 
-        /* hidden by default on desktop */
+        .mobile-download:hover { 
+            text-decoration: underline; 
+        }
+
         .mobile-download {
             display: none;
             font-size: 13px;
@@ -54,7 +60,6 @@
 
         .pdf-container {
             width: 100%;
-            /* fills remaining height */
             height: calc(100% - 61px);
             overflow: hidden;
             display: flex;
