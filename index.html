@@ -28,7 +28,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* container to hold icons */
         .desktop-container {
             width: 100%;
             height: calc(100% - 60px);
@@ -42,7 +41,6 @@
             flex-direction: column;
             align-items: center;
             cursor: grab;
-            /* crucial for mobile dragging */
             touch-action: none; 
             user-select: none;
             z-index: 10;
@@ -74,7 +72,7 @@
             font-weight: bold;
         }
 
-        /* bottom navigation */
+        /* bottom navigation bar */
         .footer {
             position: absolute;
             bottom: 0;
@@ -96,6 +94,10 @@
             font-weight: bold;
         }
 
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
         /* default folder positions */
         #projects-icon { top: 10%; left: 10%; }
         #resume-icon   { top: 25%; left: 10%; }
@@ -114,7 +116,7 @@
         </div>
 
         <div id="resume-icon" class="icon-wrapper draggable">
-            <a href="resume.html" class="icon-link">
+            <a href="https://github.com/allie-world/allie-world.github.io/blob/main/allieresume.pdf" target="_blank" class="icon-link">
                 <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/certificate_seal.png" class="icon-img" alt="resume">
                 <span class="icon-label">resume</span>
             </a>
@@ -136,16 +138,13 @@
     </div>
 
     <footer class="footer">
-        <a href="https://linkedin.com/" target="_blank">linkedin</a>
+        <a href="https://www.linkedin.com/in/allie-swarr" target="_blank">linkedin</a>
         <span>/</span>
         <a href="https://github.com/allie-world" target="_blank">github</a>
-        <span>/</span>
-        <a href="https://oklama.com" target="_blank">oklama</a>
     </footer>
 
     <script>
         interact('.draggable').draggable({
-            // enabled for both mouse and touch
             inertia: true,
             listeners: {
                 start (event) {
@@ -153,25 +152,19 @@
                 },
                 move (event) {
                     var target = event.target;
-                    // keep the dragged position in the data-x/data-y attributes
                     var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
                     var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
 
-                    // translate the element
                     target.style.transform = 'translate(' + x + 'px, ' + y + 'px)';
-
-                    // update the posiion attributes
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
                 },
                 end (event) {
-                    // delay removing the class so the click event is suppressed correctly
                     setTimeout(() => {
                         event.target.classList.remove('dragging');
                     }, 100);
                 }
             },
-            // prevent scrolling while dragging on mobile
             hold: 0 
         });
     </script>
