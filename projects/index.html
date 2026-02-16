@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>projects</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png">
     <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
@@ -14,6 +14,7 @@
             margin: 0; padding: 0; width: 100%; height: 100%; 
             background-color: var(--bg-color); font-family: "Courier New", monospace; 
             text-transform: lowercase; overflow: hidden; position: fixed;
+            display: flex; flex-direction: column;
         }
 
         .nav-back { 
@@ -22,51 +23,32 @@
         }
         .nav-back:hover { text-decoration: none; }
 
-        /* UPDATED: project launchers now look like desktop icons */
+        .desktop-container { flex: 1; width: 100%; position: relative; }
+
+        /* draggable project launchers styled as icons */
         .project-launcher {
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            z-index: 10;
-            width: 120px; /* ensures centered text breaks nicely */
-            text-align: center;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
+            position: absolute; display: flex; flex-direction: column;
+            align-items: center; cursor: grab; z-index: 10;
+            width: 120px; text-align: center; user-select: none;
+            visibility: hidden; /* hidden until positions load */
         }
 
-        .launcher-img {
-            width: 45px; /* slightly smaller than homepage icons */
-            height: auto;
-            margin-bottom: 8px;
-            -webkit-user-drag: none;
-        }
+        .launcher-img { width: 45px; height: auto; margin-bottom: 8px; -webkit-user-drag: none; }
+        .launcher-label { font-weight: bold; font-size: 13px; line-height: 1.2; }
 
-        .launcher-label {
-            font-weight: bold;
-            font-size: 13px;
-            line-height: 1.2;
-        }
-
-        /* scattered positions for launchers */
+        /* scattered initial positions */
         #launch-1 { top: 15%; left: 10%; }
         #launch-2 { top: 55%; left: 15%; }
         #launch-3 { top: 25%; left: 60%; }
         #launch-4 { top: 65%; left: 55%; }
 
-        /* the desktop windows */
+        /* draggable/resizable windows */
         .window {
-            position: absolute; 
-            width: 350px; height: 480px; 
+            position: absolute; width: 350px; height: 480px; 
             min-width: 280px; min-height: 200px;
-            background: var(--bg-color);
-            border: var(--border); 
-            display: none; 
-            flex-direction: column;
-            box-shadow: 4px 4px 0px #000; 
-            z-index: 100; 
-            touch-action: none;
+            background: var(--bg-color); border: var(--border); 
+            display: none; flex-direction: column;
+            box-shadow: 4px 4px 0px #000; z-index: 100; touch-action: none;
         }
 
         .window-header {
@@ -76,107 +58,131 @@
         }
 
         .close-btn { cursor: pointer; font-weight: bold; border: var(--border); padding: 0 5px; background: #eee; }
-        .close-btn:hover { background: #ddd; }
-
-        .window-content { 
-            padding: 15px; 
-            overflow-y: auto; 
-            flex-grow: 1; 
-        }
+        .window-content { padding: 15px; overflow-y: auto; flex-grow: 1; }
         
         .video-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%;
-            height: 0;
-            border: var(--border);
-            margin-bottom: 15px;
-            background: #000;
+            position: relative; width: 100%; padding-bottom: 56.25%;
+            height: 0; border: var(--border); margin-bottom: 15px; background: #000;
         }
-        
-        .video-wrapper iframe {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        }
-        
+        .video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
         .project-blurb { font-size: 13px; line-height: 1.5; }
+
+        /* footer: matches homepage styling */
+        .footer { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            height: calc(60px + env(safe-area-inset-bottom));
+            padding-bottom: env(safe-area-inset-bottom);
+            border-top: var(--border); display: flex; 
+            justify-content: center; align-items: center; gap: 15px; 
+            background-color: var(--bg-color); z-index: 1000; 
+        }
+        .footer a, .footer span { text-decoration: none; color: #000; font-size: 12px; font-weight: bold; }
+        .footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
 
     <a href="/" class="nav-back">←</a>
 
-    <div id="launch-1" class="project-launcher" onclick="openWindow('win-1')">
-        <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="project icon">
-        <span class="launcher-label">ask an intern</span>
-    </div>
+    <div class="desktop-container">
+        <div id="launch-1" class="project-launcher draggable-launcher" onclick="openWindow('win-1')">
+            <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="icon">
+            <span class="launcher-label">ask an intern</span>
+        </div>
 
-    <div id="launch-2" class="project-launcher" onclick="openWindow('win-2')">
-        <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="project icon">
-        <span class="launcher-label">brand identity refresh</span>
-    </div>
+        <div id="launch-2" class="project-launcher draggable-launcher" onclick="openWindow('win-2')">
+            <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="icon">
+            <span class="launcher-label">brand identity refresh</span>
+        </div>
 
-    <div id="launch-3" class="project-launcher" onclick="openWindow('win-3')">
-        <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="project icon">
-        <span class="launcher-label">content strategy v1</span>
-    </div>
+        <div id="launch-3" class="project-launcher draggable-launcher" onclick="openWindow('win-3')">
+            <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="icon">
+            <span class="launcher-label">content strategy v1</span>
+        </div>
 
-    <div id="launch-4" class="project-launcher" onclick="openWindow('win-4')">
-        <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="project icon">
-        <span class="launcher-label">event marketing lead</span>
-    </div>
+        <div id="launch-4" class="project-launcher draggable-launcher" onclick="openWindow('win-4')">
+            <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="icon">
+            <span class="launcher-label">event marketing lead</span>
+        </div>
 
-    <div id="win-1" class="window draggable-window">
-        <div class="window-header"><span>askanintern.png</span><div class="close-btn" onclick="closeWindow('win-1')">x</div></div>
-        <div class="window-content">
-            <div class="video-wrapper">
-                <iframe src="https://www.youtube.com/embed/feeIwfM_vVs?si=L_dwkFCWGo3lvxSX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            </div>
-            <div class="project-blurb">
-                Intern content is notoriously stale. I pitched a reimagining of the typical intern interview format, drawing inspiration from high-fashion editorial interviews to strip away the corporate veneer.<br><br>The goal was something that felt delightfully watchable and quietly informative. I developed a narrative arc and questions designed to share key details about what makes algorithm development at HRT unique, without ever feeling like a lecture.
+        <div id="win-1" class="window resizable-window">
+            <div class="window-header"><span>askanintern.png</span><div class="close-btn" onclick="closeWindow('win-1')">x</div></div>
+            <div class="window-content">
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/feeIwfM_vVs?si=L_dwkFCWGo3lvxSX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div class="project-blurb">
+                    intern content is notoriously stale. i pitched a reimagining of the typical intern interview format, drawing inspiration from high-fashion editorial interviews to strip away the corporate veneer.<br><br>the goal was something that felt delightfully watchable and quietly informative.
+                </div>
             </div>
         </div>
-    </div>
 
-    <div id="win-2" class="window draggable-window">
-        <div class="window-header"><span>branding.txt</span><div class="close-btn" onclick="closeWindow('win-2')">x</div></div>
-        <div class="window-content"><div class="project-blurb">overview: a description of the brand evolution and creative direction.</div></div>
-    </div>
+        </div>
 
-    <div id="win-3" class="window draggable-window">
-        <div class="window-header"><span>strategy.doc</span><div class="close-btn" onclick="closeWindow('win-3')">x</div></div>
-        <div class="window-content"><div class="project-blurb">overview: content strategy and audience research.</div></div>
-    </div>
-
-    <div id="win-4" class="window draggable-window">
-        <div class="window-header"><span>events.exe</span><div class="close-btn" onclick="closeWindow('win-4')">x</div></div>
-        <div class="window-content"><div class="project-blurb">overview: event marketing and lead generation results.</div></div>
-    </div>
+    <footer class="footer">
+        <a href="https://www.linkedin.com/in/allie-swarr" target="_blank">linkedin</a>
+        <span>/</span>
+        <a href="https://github.com/allie-world" target="_blank">github</a>
+        <span>/</span>
+        <a href="#" onclick="resetpositions(); return false;">reset</a>
+    </footer>
 
     <script>
-        let topZIndex = 100;
+        let topZIndex = 500;
 
         function openWindow(id) {
             const win = document.getElementById(id);
             win.style.display = 'flex';
             win.style.zIndex = ++topZIndex;
-            
-            if (!win.style.top && !win.getAttribute('data-x')) {
-                // Offset initial window positions slightly so they don't perfectly overlap launchers
-                const launcher = document.getElementById(id.replace('win', 'launch'));
-                const rect = launcher.getBoundingClientRect();
-                win.style.top = (rect.top + 50) + 'px';
-                win.style.left = (rect.left + 50) + 'px';
-            }
         }
 
-        function closeWindow(id) {
-            document.getElementById(id).style.display = 'none';
+        function closeWindow(id) { document.getElementById(id).style.display = 'none'; }
+
+        function saveposition(id, x, y) { localStorage.setItem(`proj_pos_${id}`, JSON.stringify({x, y})); }
+
+        function loadpositions() {
+            document.querySelectorAll('.project-launcher').forEach(el => {
+                const saved = localStorage.getItem(`proj_pos_${el.id}`);
+                if (saved) {
+                    const {x, y} = JSON.parse(saved);
+                    el.style.transform = `translate(${x}px, ${y}px)`;
+                    el.setAttribute('data-x', x);
+                    el.setAttribute('data-y', y);
+                }
+                el.style.visibility = 'visible';
+            });
         }
 
-        interact('.draggable-window')
-        .draggable({
-            allowFrom: '.window-header',
+        function resetpositions() {
+            document.querySelectorAll('.project-launcher').forEach(el => {
+                localStorage.removeItem(`proj_pos_${el.id}`);
+                el.style.transform = 'none';
+                el.removeAttribute('data-x');
+                el.removeAttribute('data-y');
+            });
+        }
+
+        // launcher dragging
+        interact('.draggable-launcher').draggable({
             inertia: true,
+            listeners: {
+                move(event) {
+                    const target = event.target;
+                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                },
+                end(event) {
+                    saveposition(event.target.id, event.target.getAttribute('data-x'), event.target.getAttribute('data-y'));
+                }
+            }
+        });
+
+        // window dragging & resizing
+        interact('.resizable-window').draggable({
+            allowFrom: '.window-header',
             listeners: {
                 start(event) { event.target.style.zIndex = ++topZIndex; },
                 move(event) {
@@ -188,8 +194,7 @@
                     target.setAttribute('data-y', y);
                 }
             }
-        })
-        .resizable({
+        }).resizable({
             edges: { left: true, right: true, bottom: true, top: true },
             listeners: {
                 move(event) {
@@ -198,19 +203,16 @@
                     let y = (parseFloat(target.getAttribute('data-y')) || 0);
                     target.style.width = event.rect.width + 'px';
                     target.style.height = event.rect.height + 'px';
-                    x += event.deltaRect.left;
-                    y += event.deltaRect.top;
+                    x += event.deltaRect.left; y += event.deltaRect.top;
                     target.style.transform = `translate(${x}px, ${y}px)`;
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
                 }
             },
-            modifiers: [
-                interact.modifiers.restrictEdges({ outer: 'parent' }),
-                interact.modifiers.restrictSize({ min: { width: 280, height: 200 } })
-            ],
-            inertia: true
+            modifiers: [ interact.modifiers.restrictSize({ min: { width: 280, height: 200 } }) ]
         });
+
+        window.onload = loadpositions;
     </script>
 </body>
 </html>
