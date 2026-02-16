@@ -72,15 +72,19 @@
         .now-playing { 
             background: #000; color: #fce4ec; padding: 5px; 
             margin-bottom: 15px; font-size: 10px; min-height: 25px;
+            display: flex; align-items: center; justify-content: center;
         }
+        .controls { display: flex; flex-direction: column; gap: 10px; }
+        .track-selection { display: flex; justify-content: center; gap: 5px; }
+        .playback-btns { display: flex; justify-content: center; gap: 5px; border-top: 1px dashed #000; pt: 10px; padding-top: 10px; }
+        
         .controls button { 
             cursor: pointer; border: var(--border); background: #fff;
-            padding: 5px 8px; font-family: inherit; margin: 2px; font-size: 11px;
+            padding: 5px 10px; font-family: inherit; font-size: 11px;
+            min-width: 45px;
         }
-        .pop-btn { 
-            margin-top: 20px; font-size: 10px; cursor: pointer;
-            border: 1px dashed #000; background: transparent; padding: 5px; width: 100%;
-        }
+        .controls button:active { background: #eee; box-shadow: inset 1px 1px 0px #000; }
+        #play-pause-btn { min-width: 80px; font-weight: bold; }
 
         .footer { 
             position: fixed; bottom: 0; left: 0; width: 100%; 
@@ -164,12 +168,16 @@
                 <div class="player-ui">
                     <div class="now-playing">no track selected</div>
                     <div class="controls">
-                        <button onclick="playMidi('onlytime.mid', 'only time')">01</button>
-                        <button onclick="playMidi('Kingdom Hearts - Dearly Beloved.mid', 'dearly beloved')">02</button>
-                        <button onclick="playMidi('Spirited Away - Inochi no Namae - The Name of Life.mid', 'spirited away')">03</button>
-                        <button onclick="stopMidi()">stop</button>
+                        <div class="track-selection">
+                            <button onclick="playMidi('onlytime.mid', 'only time')">01</button>
+                            <button onclick="playMidi('Kingdom Hearts - Dearly Beloved.mid', 'dearly beloved')">02</button>
+                            <button onclick="playMidi('Spirited Away - Inochi no Namae - The Name of Life.mid', 'spirited away')">03</button>
+                        </div>
+                        <div class="playback-btns">
+                            <button id="play-pause-btn" onclick="togglePause()">play/pause</button>
+                            <button onclick="stopMidi()">stop</button>
+                        </div>
                     </div>
-                    <button class="pop-btn" onclick="popOutPlayer()">pop-out player</button>
                 </div>
             </div>
         </div>
@@ -185,6 +193,8 @@
 
     <script>
         let topZIndex = 500;
+        let isPaused = false;
+        let currentTrack = null;
 
         function openWindow(id) {
             const win = document.getElementById(id);
@@ -201,15 +211,34 @@
         // MIDI Logic
         function playMidi(file, name) {
             MIDIjs.play(file);
+            currentTrack = name;
+            isPaused = false;
             document.querySelector('.now-playing').innerText = "now playing: " + name;
+            document.querySelector('#play-pause-btn').innerText = "pause";
         }
+
+        function togglePause() {
+            if (!currentTrack) return; // Do nothing if no track is selected
+
+            if (isPaused) {
+                MIDIjs.resume();
+                isPaused = false;
+                document.querySelector('#play-pause-btn').innerText = "pause";
+                document.querySelector('.now-playing').innerText = "now playing: " + currentTrack;
+            } else {
+                MIDIjs.pause();
+                isPaused = true;
+                document.querySelector('#play-pause-btn').innerText = "play";
+                document.querySelector('.now-playing').innerText = "paused: " + currentTrack;
+            }
+        }
+
         function stopMidi() {
             MIDIjs.stop();
+            currentTrack = null;
+            isPaused = false;
             document.querySelector('.now-playing').innerText = "stopped";
-        }
-        function popOutPlayer() {
-            window.open('/jams-mini.html', 'player', 'width=300,height=200');
-            closeWindow('win-jams');
+            document.querySelector('#play-pause-btn').innerText = "play/pause";
         }
 
         function saveposition(id, x, y) { localStorage.setItem(`pos_${id}`, JSON.stringify({x, y})); }
