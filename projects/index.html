@@ -22,20 +22,44 @@
         }
         .nav-back:hover { text-decoration: none; }
 
-        /* scattered project launchers */
+        /* UPDATED: project launchers now look like desktop icons */
         .project-launcher {
-            position: absolute; cursor: pointer; font-weight: bold;
-            padding: 5px; z-index: 10;
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            z-index: 10;
+            width: 120px; /* ensures centered text breaks nicely */
+            text-align: center;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
         }
-        .project-launcher:hover { text-decoration: underline; }
+
+        .launcher-img {
+            width: 45px; /* slightly smaller than homepage icons */
+            height: auto;
+            margin-bottom: 8px;
+            -webkit-user-drag: none;
+        }
+
+        .launcher-label {
+            font-weight: bold;
+            font-size: 13px;
+            line-height: 1.2;
+        }
+
+        /* scattered positions for launchers */
+        #launch-1 { top: 15%; left: 10%; }
+        #launch-2 { top: 55%; left: 15%; }
+        #launch-3 { top: 25%; left: 60%; }
+        #launch-4 { top: 65%; left: 55%; }
 
         /* the desktop windows */
         .window {
             position: absolute; 
-            width: 350px; /* initial width */
-            height: 480px; /* initial height */
-            min-width: 280px; 
-            min-height: 200px;
+            width: 350px; height: 480px; 
+            min-width: 280px; min-height: 200px;
             background: var(--bg-color);
             border: var(--border); 
             display: none; 
@@ -57,14 +81,13 @@
         .window-content { 
             padding: 15px; 
             overflow-y: auto; 
-            flex-grow: 1; /* fills remaining window space */
+            flex-grow: 1; 
         }
         
-        /* responsive video wrapper */
         .video-wrapper {
             position: relative;
             width: 100%;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            padding-bottom: 56.25%;
             height: 0;
             border: var(--border);
             margin-bottom: 15px;
@@ -72,30 +95,35 @@
         }
         
         .video-wrapper iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         }
         
         .project-blurb { font-size: 13px; line-height: 1.5; }
-
-        /* scattered positions for launchers */
-        #launch-1 { top: 15%; left: 10%; }
-        #launch-2 { top: 55%; left: 15%; }
-        #launch-3 { top: 25%; left: 65%; }
-        #launch-4 { top: 65%; left: 60%; }
     </style>
 </head>
 <body>
 
     <a href="/" class="nav-back">←</a>
 
-    <div id="launch-1" class="project-launcher" onclick="openWindow('win-1')">ask an intern</div>
-    <div id="launch-2" class="project-launcher" onclick="openWindow('win-2')">brand identity refresh</div>
-    <div id="launch-3" class="project-launcher" onclick="openWindow('win-3')">content strategy v1</div>
-    <div id="launch-4" class="project-launcher" onclick="openWindow('win-4')">event marketing lead</div>
+    <div id="launch-1" class="project-launcher" onclick="openWindow('win-1')">
+        <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="project icon">
+        <span class="launcher-label">ask an intern</span>
+    </div>
+
+    <div id="launch-2" class="project-launcher" onclick="openWindow('win-2')">
+        <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="project icon">
+        <span class="launcher-label">brand identity refresh</span>
+    </div>
+
+    <div id="launch-3" class="project-launcher" onclick="openWindow('win-3')">
+        <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="project icon">
+        <span class="launcher-label">content strategy v1</span>
+    </div>
+
+    <div id="launch-4" class="project-launcher" onclick="openWindow('win-4')">
+        <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="launcher-img" alt="project icon">
+        <span class="launcher-label">event marketing lead</span>
+    </div>
 
     <div id="win-1" class="window draggable-window">
         <div class="window-header"><span>askanintern.png</span><div class="close-btn" onclick="closeWindow('win-1')">x</div></div>
@@ -104,8 +132,7 @@
                 <iframe src="https://www.youtube.com/embed/feeIwfM_vVs?si=L_dwkFCWGo3lvxSX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
             </div>
             <div class="project-blurb">
-                intern content is notoriously stale. i pitched a reimagining of the typical intern interview format, drawing inspiration from high-fashion editorial interviews to strip away the corporate veneer.<br><br>
-                the goal was something that felt delightfully watchable and quietly informative. i developed a narrative arc and questions designed to share key details about what makes algorithm development at hrt unique, without ever feeling like a lecture.
+                Intern content is notoriously stale. I pitched a reimagining of the typical intern interview format, drawing inspiration from high-fashion editorial interviews to strip away the corporate veneer.<br><br>The goal was something that felt delightfully watchable and quietly informative. I developed a narrative arc and questions designed to share key details about what makes algorithm development at HRT unique, without ever feeling like a lecture.
             </div>
         </div>
     </div>
@@ -134,8 +161,11 @@
             win.style.zIndex = ++topZIndex;
             
             if (!win.style.top && !win.getAttribute('data-x')) {
-                win.style.top = '15%';
-                win.style.left = '30%';
+                // Offset initial window positions slightly so they don't perfectly overlap launchers
+                const launcher = document.getElementById(id.replace('win', 'launch'));
+                const rect = launcher.getBoundingClientRect();
+                win.style.top = (rect.top + 50) + 'px';
+                win.style.left = (rect.left + 50) + 'px';
             }
         }
 
@@ -143,7 +173,6 @@
             document.getElementById(id).style.display = 'none';
         }
 
-        // combined drag and resize logic
         interact('.draggable-window')
         .draggable({
             allowFrom: '.window-header',
@@ -161,22 +190,16 @@
             }
         })
         .resizable({
-            // resize from all edges and corners
             edges: { left: true, right: true, bottom: true, top: true },
             listeners: {
                 move(event) {
                     const target = event.target;
                     let x = (parseFloat(target.getAttribute('data-x')) || 0);
                     let y = (parseFloat(target.getAttribute('data-y')) || 0);
-
-                    // update size
                     target.style.width = event.rect.width + 'px';
                     target.style.height = event.rect.height + 'px';
-
-                    // translate when resizing from top or left
                     x += event.deltaRect.left;
                     y += event.deltaRect.top;
-
                     target.style.transform = `translate(${x}px, ${y}px)`;
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
