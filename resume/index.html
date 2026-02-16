@@ -19,31 +19,44 @@
             overflow: hidden; 
         }
 
-        /* safe area header to clear the notch */
+        /* tight header with no extra top padding */
         .resume-header { 
-            height: calc(60px + env(safe-area-inset-top)); 
+            height: 60px; 
             display: flex; 
-            align-items: flex-end; 
-            padding: 0 20px 15px 20px; 
+            align-items: center; 
+            justify-content: space-between;
+            padding: 0 20px; 
             border-bottom: 1px solid #000; 
             background-color: var(--bg-color); 
             z-index: 100;
             position: relative;
         }
 
-        .nav-back { 
+        .nav-back, .mobile-download { 
             text-decoration: none; 
             color: #000; 
             font-weight: bold; 
             cursor: pointer;
         }
 
-        .nav-back:hover { text-decoration: underline; }
+        .nav-back:hover, .mobile-download:hover { text-decoration: underline; }
 
-        /* container that forces the pdf to stay within bounds */
+        /* hidden by default on desktop */
+        .mobile-download {
+            display: none;
+            font-size: 13px;
+        }
+
+        /* show download button only on mobile */
+        @media (max-width: 768px) {
+            .mobile-download {
+                display: block;
+            }
+        }
+
         .pdf-container {
             width: 100%;
-            height: calc(100% - (60px + env(safe-area-inset-top)));
+            height: calc(100% - 61px);
             overflow: auto;
             -webkit-overflow-scrolling: touch;
         }
@@ -59,7 +72,8 @@
 <body>
 
     <div class="resume-header">
-        <a href="/" class="nav-back">←</a>
+        <a href="/" class="nav-back">← desktop</a>
+        <a href="/allieresume.pdf" download class="mobile-download">download pdf</a>
     </div>
 
     <div class="pdf-container">
