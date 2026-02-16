@@ -1,31 +1,167 @@
 <!DOCTYPE html>
-<style>
-  body {
-/*   background-image: url('https://preview.redd.it/its-a-windows-classic-wallpaper-but-hd-v0-y70xr2tvtaed1.jpg?width=4089&format=pjpg&auto=webp&s=403d395b423b56c646466ba046b1b916ae5da9ce'); */
-  background: #008080;
-    background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-size: cover;
-}
-  .footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: #c0c0c0;
-     height: 2rem;
-}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Portfolio</title>
+    <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #fce4ec; /* Light Pink */
+            --text-color: #000;
+        }
 
-  
-</style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Courier New", Courier, monospace;
+        }
 
-<html>
-  <body>
-    <h1>welcome</h1>
-    <p>Test</p>
-    <a draggable="true" data-drag="true" data-index="1" style="position: absolute; left: 30%; top: 30%;" href="google.com" target="_blank"><img draggable="true" src="95-folder-icon.png"/></a>
-        <a draggable="true" data-drag="true" data-index="1" style="position: absolute; left: 50%; top: 80%;" href="google.com" target="_blank"><img draggable="true" src="95-folder-icon.png"/></a>
-<a draggable="true" data-drag="true" data-index="1" style="position: absolute; left: 20%; top: 40%;" href="google.com" target="_blank"><img draggable="true" src="address_book_user.png"/></a>
-  <a draggable="true" data-drag="true" data-index="1" style="position: absolute; left: 70%; top: 60%;" href="google.com" target="_blank"><img draggable="true" src="certificate_seal.png"/></a></body>
-  <div class="footer"></div>
+        body {
+            background-color: var(--bg-color);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Draggable Wrapper */
+        .icon-wrapper {
+            position: absolute;
+            width: 90px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: grab;
+            touch-action: none;
+            user-select: none;
+        }
+
+        .icon-link {
+            text-decoration: none;
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            pointer-events: auto;
+        }
+
+        .folder-svg {
+            width: 50px;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+
+        .icon-label {
+            font-size: 11px;
+            text-align: center;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        /* Footer Navigation */
+        .footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            border-top: 1px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .footer a {
+            text-decoration: none;
+            color: #000;
+            font-size: 12px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Default Placement */
+        #projects-icon { top: 10%; left: 10%; }
+        #resume-icon   { top: 25%; left: 10%; }
+        #about-icon    { top: 40%; left: 10%; }
+        #contact-icon  { top: 55%; left: 10%; }
+
+        /* Mobile View - Snap to grid */
+        @media (max-width: 600px) {
+            .icon-wrapper {
+                position: static !important;
+                transform: none !important;
+                width: 100%;
+            }
+            .desktop-grid {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
+                padding: 40px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="desktop-grid">
+        <div id="projects-icon" class="icon-wrapper draggable">
+            <a href="projects.html" class="icon-link" draggable="false">
+                <svg class="folder-svg" viewBox="0 0 24 24" fill="black"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                <span class="icon-label">PROJECTS</span>
+            </a>
+        </div>
+
+        <div id="resume-icon" class="icon-wrapper draggable">
+            <a href="resume.html" class="icon-link" draggable="false">
+                <svg class="folder-svg" viewBox="0 0 24 24" fill="black"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                <span class="icon-label">RESUME</span>
+            </a>
+        </div>
+
+        <div id="about-icon" class="icon-wrapper draggable">
+            <a href="about.html" class="icon-link" draggable="false">
+                <svg class="folder-svg" viewBox="0 0 24 24" fill="black"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                <span class="icon-label">ABOUT</span>
+            </a>
+        </div>
+
+        <div id="contact-icon" class="icon-wrapper draggable">
+            <a href="contact.html" class="icon-link" draggable="false">
+                <svg class="folder-svg" viewBox="0 0 24 24" fill="black"><path d="M10 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
+                <span class="icon-label">CONTACT</span>
+            </a>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <a href="https://linkedin.com/" target="_blank">LINKEDIN</a>
+        <a href="https://github.com/" target="_blank">GITHUB</a>
+    </footer>
+
+    <script>
+        interact('.draggable').draggable({
+            listeners: {
+                move (event) {
+                    var target = event.target
+                    var x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx
+                    var y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy
+
+                    target.style.transform = 'translate(' + x + 'px, ' + y + 'px)'
+
+                    target.setAttribute('data-x', x)
+                    target.setAttribute('data-y', y)
+                }
+            }
+        })
+    </script>
+</body>
 </html>
