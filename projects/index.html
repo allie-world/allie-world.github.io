@@ -31,9 +31,18 @@
 
         /* the desktop windows */
         .window {
-            position: absolute; width: 320px; background: var(--bg-color);
-            border: var(--border); display: none; flex-direction: column;
-            box-shadow: 4px 4px 0px #000; z-index: 100; touch-action: none;
+            position: absolute; 
+            width: 350px; /* initial width */
+            height: 480px; /* initial height */
+            min-width: 280px; 
+            min-height: 200px;
+            background: var(--bg-color);
+            border: var(--border); 
+            display: none; 
+            flex-direction: column;
+            box-shadow: 4px 4px 0px #000; 
+            z-index: 100; 
+            touch-action: none;
         }
 
         .window-header {
@@ -45,9 +54,31 @@
         .close-btn { cursor: pointer; font-weight: bold; border: var(--border); padding: 0 5px; background: #eee; }
         .close-btn:hover { background: #ddd; }
 
-        .window-content { padding: 15px; overflow-y: auto; max-height: 450px; }
+        .window-content { 
+            padding: 15px; 
+            overflow-y: auto; 
+            flex-grow: 1; /* fills remaining window space */
+        }
         
-        .project-media { width: 100%; height: auto; border: var(--border); margin-bottom: 12px; }
+        /* responsive video wrapper */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            border: var(--border);
+            margin-bottom: 15px;
+            background: #000;
+        }
+        
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
         .project-blurb { font-size: 13px; line-height: 1.5; }
 
         /* scattered positions for launchers */
@@ -69,30 +100,29 @@
     <div id="win-1" class="window draggable-window">
         <div class="window-header"><span>askanintern.png</span><div class="close-btn" onclick="closeWindow('win-1')">x</div></div>
         <div class="window-content">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/feeIwfM_vVs?si=L_dwkFCWGo3lvxSX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-            <div class="project-blurb">Intern content is notoriously stale. I pitched a reimagining of the typical intern interview format, drawing inspiration from high-fashion editorial interviews to strip away the corporate veneer.</br>The goal was something that felt delightfully watchable and quietly informative. I developed a narrative arc and questions designed to share key details about what makes algorithm development at HRT unique, without ever feeling like a lecture. </div>
+            <div class="video-wrapper">
+                <iframe src="https://www.youtube.com/embed/feeIwfM_vVs?si=L_dwkFCWGo3lvxSX" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <div class="project-blurb">
+                intern content is notoriously stale. i pitched a reimagining of the typical intern interview format, drawing inspiration from high-fashion editorial interviews to strip away the corporate veneer.<br><br>
+                the goal was something that felt delightfully watchable and quietly informative. i developed a narrative arc and questions designed to share key details about what makes algorithm development at hrt unique, without ever feeling like a lecture.
+            </div>
         </div>
     </div>
 
     <div id="win-2" class="window draggable-window">
         <div class="window-header"><span>branding.txt</span><div class="close-btn" onclick="closeWindow('win-2')">x</div></div>
-        <div class="window-content">
-            <div class="project-blurb">overview: a description of the brand evolution, creative direction, and how it aligns with the hrt mission.</div>
-        </div>
+        <div class="window-content"><div class="project-blurb">overview: a description of the brand evolution and creative direction.</div></div>
     </div>
 
     <div id="win-3" class="window draggable-window">
         <div class="window-header"><span>strategy.doc</span><div class="close-btn" onclick="closeWindow('win-3')">x</div></div>
-        <div class="window-content">
-            <div class="project-blurb">overview: outline of the editorial calendar, target audience research, and engagement growth strategies.</div>
-        </div>
+        <div class="window-content"><div class="project-blurb">overview: content strategy and audience research.</div></div>
     </div>
 
     <div id="win-4" class="window draggable-window">
         <div class="window-header"><span>events.exe</span><div class="close-btn" onclick="closeWindow('win-4')">x</div></div>
-        <div class="window-content">
-            <div class="project-blurb">overview: execution details for internal or external events, including vendor management and lead generation results.</div>
-        </div>
+        <div class="window-content"><div class="project-blurb">overview: event marketing and lead generation results.</div></div>
     </div>
 
     <script>
@@ -103,10 +133,9 @@
             win.style.display = 'flex';
             win.style.zIndex = ++topZIndex;
             
-            // set initial center-ish position if not dragged yet
             if (!win.style.top && !win.getAttribute('data-x')) {
-                win.style.top = '20%';
-                win.style.left = '35%';
+                win.style.top = '15%';
+                win.style.left = '30%';
             }
         }
 
@@ -114,7 +143,9 @@
             document.getElementById(id).style.display = 'none';
         }
 
-        interact('.draggable-window').draggable({
+        // combined drag and resize logic
+        interact('.draggable-window')
+        .draggable({
             allowFrom: '.window-header',
             inertia: true,
             listeners: {
@@ -128,9 +159,35 @@
                     target.setAttribute('data-y', y);
                 }
             }
+        })
+        .resizable({
+            // resize from all edges and corners
+            edges: { left: true, right: true, bottom: true, top: true },
+            listeners: {
+                move(event) {
+                    const target = event.target;
+                    let x = (parseFloat(target.getAttribute('data-x')) || 0);
+                    let y = (parseFloat(target.getAttribute('data-y')) || 0);
+
+                    // update size
+                    target.style.width = event.rect.width + 'px';
+                    target.style.height = event.rect.height + 'px';
+
+                    // translate when resizing from top or left
+                    x += event.deltaRect.left;
+                    y += event.deltaRect.top;
+
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
+                }
+            },
+            modifiers: [
+                interact.modifiers.restrictEdges({ outer: 'parent' }),
+                interact.modifiers.restrictSize({ min: { width: 280, height: 200 } })
+            ],
+            inertia: true
         });
     </script>
 </body>
 </html>
-
-
