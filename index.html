@@ -1,3 +1,8 @@
+I've integrated the jams icon and the media player into your latest index.html. This version includes the custom MIDI playback logic and a pop-out feature so the music can keep playing while you explore the site.
+
+index.html
+HTML
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,6 +22,7 @@
 
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png">
     <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
+    <script src="https://www.midijs.net/lib/midi.js"></script>
     
     <style>
         :root { --bg-color: #fce4ec; --text-color: #000; --border: 1px solid #000; }
@@ -48,7 +54,7 @@
         .icon-img { width: 75px; height: auto; margin-bottom: 8px; -webkit-user-drag: none; }
         .icon-label { font-size: 11px; text-align: center; font-weight: bold; }
 
-        /* window styling for the about me popup */
+        /* Window styling */
         .window {
             position: absolute; width: 320px; background: var(--bg-color);
             border: var(--border); display: none; flex-direction: column;
@@ -66,6 +72,21 @@
 
         .window-content { padding: 15px; overflow-y: auto; max-height: 400px; font-size: 13px; line-height: 1.5; }
 
+        /* Media Player UI */
+        .player-ui { text-align: center; }
+        .now-playing { 
+            background: #000; color: #fce4ec; padding: 5px; 
+            margin-bottom: 15px; font-size: 10px; min-height: 25px;
+        }
+        .controls button { 
+            cursor: pointer; border: var(--border); background: #fff;
+            padding: 5px 8px; font-family: inherit; margin: 2px; font-size: 11px;
+        }
+        .pop-btn { 
+            margin-top: 20px; font-size: 10px; cursor: pointer;
+            border: 1px dashed #000; background: transparent; padding: 5px; width: 100%;
+        }
+
         .footer { 
             position: fixed; bottom: 0; left: 0; width: 100%; 
             height: calc(60px + env(safe-area-inset-bottom));
@@ -78,10 +99,13 @@
         .footer a, .footer span { text-decoration: none; color: #000; font-size: 12px; font-weight: bold; }
         .footer a:hover { text-decoration: underline; }
 
-        #projects-icon { top: 15%; left: 5%; }
-        #resume-icon   { top: 32%; left: 15%; }
-        #about-icon    { top: 48%; left: 60%; }
-        #contact-icon  { top: 18%; left: 78%; }
+        /* Initial positions */
+        #projects-icon { top: 10%; left: 5%; }
+        #resume-icon   { top: 28%; left: 8%; }
+        #linkedin-icon { top: 12%; left: 82%; }
+        #about-icon    { top: 45%; left: 45%; }
+        #contact-icon  { top: 60%; left: 80%; }
+        #jams-icon     { top: 68%; left: 10%; }
     </style>
 </head>
 <body>
@@ -103,8 +127,8 @@
             </a>
         </div>
         
- <div id="linkedin-icon" class="icon-wrapper draggable">
-            <a href="https://www.linkedin.com/in/allie-swarr/" class="icon-link">
+        <div id="linkedin-icon" class="icon-wrapper draggable">
+            <a href="https://www.linkedin.com/in/allie-swarr/" class="icon-link" target="_blank">
                 <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/mush.gif" class="icon-img" alt="linkedin">
                 <span class="icon-label">LinkedIn</span>
             </a>
@@ -117,20 +141,41 @@
             </div>
         </div>
 
-        <div id="email-icon" class="icon-wrapper draggable">
-            <a href="mailto:allie.swarr@gmail.com" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/email.gif" class="icon-img" alt="email">
-                <span class="icon-label">email</span>
+        <div id="contact-icon" class="icon-wrapper draggable">
+            <a href="/contact" class="icon-link">
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/email.gif" class="icon-img" alt="contact">
+                <span class="icon-label">contact</span>
             </a>
+        </div>
+
+        <div id="jams-icon" class="icon-wrapper draggable">
+            <div class="icon-link" onclick="openWindow('win-jams')">
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="icon-img" alt="jams">
+                <span class="icon-label">jams</span>
+            </div>
         </div>
 
         <div id="win-about" class="window draggable-window">
             <div class="window-header"><span>about_me.txt</span><div class="close-btn" onclick="closeWindow('win-about')">x</div></div>
             <div class="window-content">
                 Hi! I'm Allie. <br><br>
-I’m a marketer based in NYC. Currently I lead social at Hudson River Trading, a quantitative trading firm, where I spend a lot of time thinking about how to nerd-snipe the smartest technologists with content that feels warm, smart, and human. On any given day, this might involve creative strategy, production, copywriting, design, and frequent Googling. (What are FLOPs, exactly?)
-<br><br>I like working on small teams who embrace tight deadlines and the challenge of getting the attention of people who are very good at ignoring marketing. </br></br>
-Want to chat more? Reach out to allie.swarr@gmail.com.
+                I’m a marketer based in NYC. Currently I lead social at Hudson River Trading, a quantitative trading firm... (trunc)
+            </div>
+        </div>
+
+        <div id="win-jams" class="window draggable-window">
+            <div class="window-header"><span>media_player.exe</span><div class="close-btn" onclick="closeWindow('win-jams')">x</div></div>
+            <div class="window-content">
+                <div class="player-ui">
+                    <div class="now-playing">no track selected</div>
+                    <div class="controls">
+                        <button onclick="playMidi('onlytime.mid', 'only time')">01</button>
+                        <button onclick="playMidi('Kingdom Hearts - Dearly Beloved.mid', 'dearly beloved')">02</button>
+                        <button onclick="playMidi('Spirited Away - Inochi no Namae - The Name of Life.mid', 'spirited away')">03</button>
+                        <button onclick="stopMidi()">stop</button>
+                    </div>
+                    <button class="pop-btn" onclick="popOutPlayer()">pop-out player</button>
+                </div>
             </div>
         </div>
     </div>
@@ -156,13 +201,23 @@ Want to chat more? Reach out to allie.swarr@gmail.com.
             }
         }
 
-        function closeWindow(id) {
-            document.getElementById(id).style.display = 'none';
+        function closeWindow(id) { document.getElementById(id).style.display = 'none'; }
+
+        // MIDI Logic
+        function playMidi(file, name) {
+            MIDIjs.play(file);
+            document.querySelector('.now-playing').innerText = "now playing: " + name;
+        }
+        function stopMidi() {
+            MIDIjs.stop();
+            document.querySelector('.now-playing').innerText = "stopped";
+        }
+        function popOutPlayer() {
+            window.open('/jams-mini.html', 'player', 'width=300,height=200');
+            closeWindow('win-jams');
         }
 
-        function saveposition(id, x, y) {
-            localStorage.setItem(`pos_${id}`, JSON.stringify({x, y}));
-        }
+        function saveposition(id, x, y) { localStorage.setItem(`pos_${id}`, JSON.stringify({x, y})); }
 
         function loadpositions() {
             const wrappers = document.querySelectorAll('.icon-wrapper');
@@ -188,7 +243,6 @@ Want to chat more? Reach out to allie.swarr@gmail.com.
             });
         }
 
-        // drag icons
         interact('.draggable').draggable({
             inertia: true,
             listeners: {
@@ -209,7 +263,6 @@ Want to chat more? Reach out to allie.swarr@gmail.com.
             }
         });
 
-        // drag window
         interact('.draggable-window').draggable({
             allowFrom: '.window-header',
             listeners: {
