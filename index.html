@@ -56,6 +56,21 @@
             pointer-events: none; 
         }
 
+        /* reset button in top right */
+        .reset-link {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 1000; /* highest priority */
+            text-decoration: none;
+            color: #000;
+            cursor: pointer;
+        }
+
+        .reset-link:hover { text-decoration: underline; }
+
         .desktop-container { 
             flex: 1;
             width: 100%; 
@@ -71,7 +86,7 @@
             cursor: grab; 
             touch-action: none; 
             user-select: none; 
-            z-index: 10; 
+            z-index: 500; /* high z-index to stay above footer */
             visibility: hidden; 
         }
 
@@ -101,13 +116,12 @@
             align-items: center; 
             gap: 15px; 
             background-color: var(--bg-color); 
-            z-index: 100; 
+            z-index: 100; /* lower than icons */
         }
 
         .footer a, .footer span { text-decoration: none; color: #000; font-size: 12px; font-weight: bold; }
         .footer a:hover { text-decoration: underline; }
 
-        /* Default scattered positions */
         #projects-icon { top: 15%; left: 5%; }
         #resume-icon   { top: 32%; left: 15%; }
         #about-icon    { top: 48%; left: 60%; }
@@ -117,6 +131,7 @@
 <body>
 
     <div class="header-name">allie swarr</div>
+    <a href="#" class="reset-link" onclick="resetpositions(event)">reset</a>
 
     <div class="desktop-container">
         <div id="projects-icon" class="icon-wrapper draggable">
@@ -157,6 +172,15 @@
     <script>
         function saveposition(id, x, y) {
             localStorage.setItem(`pos_${id}`, JSON.stringify({x, y}));
+        }
+
+        function resetpositions(e) {
+            e.preventDefault();
+            const wrappers = document.querySelectorAll('.icon-wrapper');
+            wrappers.forEach(wrapper => {
+                localStorage.removeItem(`pos_${wrapper.id}`);
+            });
+            window.location.reload();
         }
 
         function loadpositions() {
