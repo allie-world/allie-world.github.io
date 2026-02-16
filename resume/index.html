@@ -2,29 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>resume</title>
     <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png">
     
     <style>
+        :root { --bg-color: #fce4ec; }
+
         body, html { 
             margin: 0; 
             padding: 0; 
             height: 100%; 
-            background-color: #fce4ec; 
+            background-color: var(--bg-color); 
             font-family: "Courier New", monospace; 
             text-transform: lowercase; 
             overflow: hidden; 
         }
 
-        /* uses safe area insets to stay below the notch on mobile */
+        /* safe area header to clear the notch */
         .resume-header { 
             height: calc(60px + env(safe-area-inset-top)); 
             display: flex; 
             align-items: flex-end; 
             padding: 0 20px 15px 20px; 
             border-bottom: 1px solid #000; 
-            background-color: #fce4ec; 
+            background-color: var(--bg-color); 
             z-index: 100;
             position: relative;
         }
@@ -38,11 +40,17 @@
 
         .nav-back:hover { text-decoration: underline; }
 
-        /* the container for the pdf */
+        /* container that forces the pdf to stay within bounds */
+        .pdf-container {
+            width: 100%;
+            height: calc(100% - (60px + env(safe-area-inset-top)));
+            overflow: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         .pdf-viewer { 
             width: 100%; 
-            /* fills the space minus the header height */
-            height: calc(100% - (60px + env(safe-area-inset-top))); 
+            height: 100%;
             border: none; 
             display: block;
         }
@@ -51,10 +59,14 @@
 <body>
 
     <div class="resume-header">
-        <a href="/" class="nav-back">← desktop</a>
+        <a href="/" class="nav-back">←</a>
     </div>
 
-    <iframe src="/allieresume.pdf#view=fitW" class="pdf-viewer"></iframe>
+    <div class="pdf-container">
+        <object data="/allieresume.pdf#view=FitH" type="application/pdf" class="pdf-viewer">
+            <embed src="/allieresume.pdf#view=FitH" type="application/pdf" />
+        </object>
+    </div>
 
 </body>
 </html>
