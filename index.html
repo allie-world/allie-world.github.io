@@ -1,12 +1,3 @@
-That is a fantastic idea. Integrating the about me section as a draggable window on the main desktop makes the site feel like a single, cohesive operating system.
-
-To do this, we need to update your home page (index.html) to include the window structure and the logic to open it when the "about me" icon is clicked, rather than navigating away.
-
-Updated index.html (Home Page)
-I have added the window container and the JavaScript logic to handle opening, closing, and dragging the "about me" window directly on the desktop.
-
-HTML
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,28 +91,28 @@ HTML
     <div class="desktop-container">
         <div id="projects-icon" class="icon-wrapper draggable">
             <a href="/projects" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="icon-img" alt="projects">
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/twirling vortex purple.gif" class="icon-img" alt="projects">
                 <span class="icon-label">projects</span>
             </a>
         </div>
 
         <div id="resume-icon" class="icon-wrapper draggable">
             <a href="/resume" target="_blank" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/certificate_seal.png" class="icon-img" alt="resume">
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/book1.gif" class="icon-img" alt="resume">
                 <span class="icon-label">resume</span>
             </a>
         </div>
 
         <div id="about-icon" class="icon-wrapper draggable">
             <div class="icon-link" onclick="openWindow('win-about')">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/address_book_user.png" class="icon-img" alt="about">
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/runningunicorn.gif" class="icon-img" alt="about">
                 <span class="icon-label">about me</span>
             </div>
         </div>
 
         <div id="contact-icon" class="icon-wrapper draggable">
             <a href="/contact" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/mail.png" class="icon-img" alt="contact">
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/email.gif" class="icon-img" alt="contact">
                 <span class="icon-label">contact</span>
             </a>
         </div>
@@ -129,9 +120,10 @@ HTML
         <div id="win-about" class="window draggable-window">
             <div class="window-header"><span>about_me.txt</span><div class="close-btn" onclick="closeWindow('win-about')">x</div></div>
             <div class="window-content">
-                marketing specialist based in [your location]. currently working on [template project].
-                <br><br>
-                i enjoy building interactive experiences and managing brand growth.
+                Hi! I'm Allie. <br><br>
+I’m a marketer based in NYC. Currently I lead social at Hudson River Trading, a quantitative trading firm, where I spend a lot of time thinking about how to nerd-snipe the smartest technologists with content that feels warm, smart, and human. On any given day, this might involve creative strategy, production, copywriting, design, and frequent Googling. (What are FLOPs, exactly?)
+I like working on small teams who embrace tight deadlines and the challenge of getting the attention of people who are very good at ignoring marketing. </br></br>
+Want to chat more? Reach out to allie.swarr@gmail.com.
             </div>
         </div>
     </div>
