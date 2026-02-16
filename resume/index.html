@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>resume</title>
+    <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png">
+    
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            background-color: #fce4ec;
+            font-family: "Courier New", monospace;
+            text-transform: lowercase;
+            overflow: hidden; /* prevents double scrollbars */
+        }
+
+        /* simple header to match projects/about/contact */
+        .resume-header {
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            border-bottom: 1px solid #000;
+            background-color: #fce4ec;
+        }
+
+        .nav-back {
+            text-decoration: none;
+            color: #000;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .nav-back:hover { text-decoration: underline; }
+
+        /* the pdf container */
+        .pdf-viewer {
+            width: 100%;
+            height: calc(100% - 61px); /* subtract header height + border */
+            border: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="resume-header">
+        <a href="/" class="nav-back">← desktop</a>
+    </div>
+
+    <iframe src="/allieresume.pdf" class="pdf-viewer"></iframe>
+
+</body>
+</html>
