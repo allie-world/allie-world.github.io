@@ -1,3 +1,12 @@
+That is a fantastic idea. Integrating the about me section as a draggable window on the main desktop makes the site feel like a single, cohesive operating system.
+
+To do this, we need to update your home page (index.html) to include the window structure and the logic to open it when the "about me" icon is clicked, rather than navigating away.
+
+Updated index.html (Home Page)
+I have added the window container and the JavaScript logic to handle opening, closing, and dragging the "about me" window directly on the desktop.
+
+HTML
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,104 +28,60 @@
     <script src="https://unpkg.com/interactjs/dist/interact.min.js"></script>
     
     <style>
-        :root { --bg-color: #fce4ec; --text-color: #000; }
+        :root { --bg-color: #fce4ec; --text-color: #000; --border: 1px solid #000; }
         
-        html { 
-            background-color: var(--bg-color); 
-            height: -webkit-fill-available; 
-        }
+        html { background-color: var(--bg-color); height: -webkit-fill-available; }
 
         body { 
-            margin: 0; 
-            padding: 0; 
-            width: 100%; 
-            height: 100vh;
-            height: -webkit-fill-available;
-            overflow: hidden; 
-            background-color: var(--bg-color); 
-            position: fixed; 
-            text-transform: lowercase; 
-            display: flex;
-            flex-direction: column;
+            margin: 0; padding: 0; width: 100%; height: 100vh;
+            height: -webkit-fill-available; overflow: hidden; 
+            background-color: var(--bg-color); position: fixed; 
+            text-transform: lowercase; display: flex; flex-direction: column;
         }
 
-        * { 
-            box-sizing: border-box; 
-            font-family: "Courier New", Courier, monospace; 
-            -webkit-tap-highlight-color: transparent; 
-        }
+        * { box-sizing: border-box; font-family: "Courier New", Courier, monospace; -webkit-tap-highlight-color: transparent; }
 
-        .header-name { 
-            position: absolute; 
-            top: 20px; 
-            left: 20px; 
-            font-size: 14px; 
-            font-weight: bold; 
-            z-index: 100; 
-            pointer-events: none; 
-        }
+        .header-name { position: absolute; top: 20px; left: 20px; font-size: 14px; font-weight: bold; z-index: 100; pointer-events: none; }
 
-        /* reset button in top right */
-        .reset-link {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 14px;
-            font-weight: bold;
-            z-index: 1000; /* highest priority */
-            text-decoration: none;
-            color: #000;
-            cursor: pointer;
-        }
-
-        .reset-link:hover { text-decoration: underline; }
-
-        .desktop-container { 
-            flex: 1;
-            width: 100%; 
-            position: relative; 
-        }
+        .desktop-container { flex: 1; width: 100%; position: relative; }
 
         .icon-wrapper { 
-            position: absolute; 
-            width: 100px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            cursor: grab; 
-            touch-action: none; 
-            user-select: none; 
-            z-index: 500; /* high z-index to stay above footer */
-            visibility: hidden; 
+            position: absolute; width: 100px; display: flex; flex-direction: column; 
+            align-items: center; cursor: grab; touch-action: none; user-select: none; 
+            z-index: 10; visibility: hidden; 
         }
 
         .icon-wrapper.dragging a { pointer-events: none; }
 
-        .icon-link { 
-            text-decoration: none; 
-            color: var(--text-color); 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-        }
-
-        .icon-img { width: 55px; height: auto; margin-bottom: 8px; -webkit-user-drag: none; }
+        .icon-link { text-decoration: none; color: var(--text-color); display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .icon-img { width: 50px; height: auto; margin-bottom: 8px; -webkit-user-drag: none; }
         .icon-label { font-size: 11px; text-align: center; font-weight: bold; }
 
+        /* window styling for the about me popup */
+        .window {
+            position: absolute; width: 320px; background: var(--bg-color);
+            border: var(--border); display: none; flex-direction: column;
+            box-shadow: 4px 4px 0px #000; z-index: 500; touch-action: none;
+        }
+
+        .window-header {
+            padding: 5px 10px; border-bottom: var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: grab; background: #fff;
+        }
+
+        .close-btn { cursor: pointer; font-weight: bold; border: var(--border); padding: 0 5px; background: #eee; }
+        .close-btn:hover { background: #ddd; }
+
+        .window-content { padding: 15px; overflow-y: auto; max-height: 400px; font-size: 13px; line-height: 1.5; }
+
         .footer { 
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%; 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
             height: calc(60px + env(safe-area-inset-bottom));
             padding-bottom: env(safe-area-inset-bottom);
-            border-top: 1px solid #000; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 15px; 
-            background-color: var(--bg-color); 
-            z-index: 100; /* lower than icons */
+            border-top: var(--border); display: flex; 
+            justify-content: center; align-items: center; gap: 15px; 
+            background-color: var(--bg-color); z-index: 100; 
         }
 
         .footer a, .footer span { text-decoration: none; color: #000; font-size: 12px; font-weight: bold; }
@@ -131,41 +96,43 @@
 <body>
 
     <div class="header-name">allie swarr</div>
-    <a href="#" class="reset-link" onclick="resetpositions(event)">reset</a>
 
     <div class="desktop-container">
         <div id="projects-icon" class="icon-wrapper draggable">
             <a href="/projects" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/twirling vortex purple.gif" class="icon-img" alt="projects">
-                <span class="icon-label">work</span>
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/folder-icon.png" class="icon-img" alt="projects">
+                <span class="icon-label">projects</span>
             </a>
         </div>
 
         <div id="resume-icon" class="icon-wrapper draggable">
             <a href="/resume" target="_blank" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/book1.gif" class="icon-img" alt="resume">
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/certificate_seal.png" class="icon-img" alt="resume">
                 <span class="icon-label">resume</span>
             </a>
         </div>
 
         <div id="about-icon" class="icon-wrapper draggable">
-            <a href="/about" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/butterfly.gif" class="icon-img" alt="about">
-                <span class="icon-label">about allie</span>
-            </a>
+            <div class="icon-link" onclick="openWindow('win-about')">
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/address_book_user.png" class="icon-img" alt="about">
+                <span class="icon-label">about me</span>
+            </div>
         </div>
 
         <div id="contact-icon" class="icon-wrapper draggable">
             <a href="/contact" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/email.gif" class="icon-img" alt="email">
-                <span class="icon-label">email</span>
+                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/mail.png" class="icon-img" alt="contact">
+                <span class="icon-label">contact</span>
             </a>
         </div>
-         <div id="linkedin-icon" class="icon-wrapper draggable">
-            <a href="https://www.linkedin.com/in/allie-swarr" class="icon-link">
-                <img src="https://raw.githubusercontent.com/allie-world/allie-world.github.io/main/castle.gif" class="icon-img" alt="contact">
-                <span class="icon-label">linkedin</span>
-            </a>
+
+        <div id="win-about" class="window draggable-window">
+            <div class="window-header"><span>about_me.txt</span><div class="close-btn" onclick="closeWindow('win-about')">x</div></div>
+            <div class="window-content">
+                marketing specialist based in [your location]. currently working on [template project].
+                <br><br>
+                i enjoy building interactive experiences and managing brand growth.
+            </div>
         </div>
     </div>
 
@@ -173,20 +140,29 @@
         <a href="https://www.linkedin.com/in/allie-swarr" target="_blank">linkedin</a>
         <span>/</span>
         <a href="https://github.com/allie-world" target="_blank">github</a>
+        <span>/</span>
+        <a href="#" onclick="resetpositions(); return false;">reset</a>
     </footer>
 
     <script>
-        function saveposition(id, x, y) {
-            localStorage.setItem(`pos_${id}`, JSON.stringify({x, y}));
+        let topZIndex = 500;
+
+        function openWindow(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'flex';
+            win.style.zIndex = ++topZIndex;
+            if (!win.style.top && !win.getAttribute('data-x')) {
+                win.style.top = '20%';
+                win.style.left = '20%';
+            }
         }
 
-        function resetpositions(e) {
-            e.preventDefault();
-            const wrappers = document.querySelectorAll('.icon-wrapper');
-            wrappers.forEach(wrapper => {
-                localStorage.removeItem(`pos_${wrapper.id}`);
-            });
-            window.location.reload();
+        function closeWindow(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+
+        function saveposition(id, x, y) {
+            localStorage.setItem(`pos_${id}`, JSON.stringify({x, y}));
         }
 
         function loadpositions() {
@@ -203,6 +179,17 @@
             });
         }
 
+        function resetpositions() {
+            const wrappers = document.querySelectorAll('.icon-wrapper');
+            wrappers.forEach(wrapper => {
+                localStorage.removeItem(`pos_${wrapper.id}`);
+                wrapper.style.transform = 'none';
+                wrapper.removeAttribute('data-x');
+                wrapper.removeAttribute('data-y');
+            });
+        }
+
+        // drag icons
         interact('.draggable').draggable({
             inertia: true,
             listeners: {
@@ -219,6 +206,22 @@
                     const target = event.target;
                     saveposition(target.id, target.getAttribute('data-x'), target.getAttribute('data-y'));
                     setTimeout(() => { target.classList.remove('dragging'); }, 100); 
+                }
+            }
+        });
+
+        // drag window
+        interact('.draggable-window').draggable({
+            allowFrom: '.window-header',
+            listeners: {
+                start(event) { event.target.style.zIndex = ++topZIndex; },
+                move(event) {
+                    const target = event.target;
+                    const x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+                    const y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+                    target.style.transform = `translate(${x}px, ${y}px)`;
+                    target.setAttribute('data-x', x);
+                    target.setAttribute('data-y', y);
                 }
             }
         });
