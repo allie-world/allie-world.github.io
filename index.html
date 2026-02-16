@@ -46,7 +46,6 @@
             z-index: 10;
         }
 
-        /* prevent click while dragging */
         .icon-wrapper.dragging a {
             pointer-events: none;
         }
@@ -98,11 +97,11 @@
             text-decoration: underline;
         }
 
-        /* default positions if no storage found */
-        #projects-icon { top: 10%; left: 10%; }
-        #resume-icon   { top: 25%; left: 10%; }
-        #about-icon    { top: 40%; left: 10%; }
-        #contact-icon  { top: 55%; left: 10%; }
+        /* scattered initial positions mimicking oklama layout */
+        #projects-icon { top: 12%; left: 3%; }
+        #resume-icon   { top: 28%; left: 12%; }
+        #about-icon    { top: 45%; left: 58%; }
+        #contact-icon  { top: 15%; left: 75%; }
     </style>
 </head>
 <body>
@@ -144,22 +143,6 @@
     </footer>
 
     <script>
-        // function to load saved positions
-        function loadpositions() {
-            document.querySelectorAll('.draggable').forEach(el => {
-                const saved = localStorage.getItem(`pos_${el.id}`);
-                if (saved) {
-                    const coords = JSON.parse(saved);
-                    el.style.transform = `translate(${coords.x}px, ${coords.y}px)`;
-                    el.setAttribute('data-x', coords.x);
-                    el.setAttribute('data-y', coords.y);
-                }
-            });
-        }
-
-        // run load on startup
-        loadpositions();
-
         interact('.draggable').draggable({
             inertia: true,
             listeners: {
@@ -176,12 +159,6 @@
                     target.setAttribute('data-y', y);
                 },
                 end (event) {
-                    // save to localstorage
-                    const target = event.target;
-                    const x = target.getAttribute('data-x');
-                    const y = target.getAttribute('data-y');
-                    localStorage.setItem(`pos_${target.id}`, JSON.stringify({x, y}));
-
                     setTimeout(() => {
                         event.target.classList.remove('dragging');
                     }, 100);
