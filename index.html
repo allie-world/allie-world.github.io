@@ -28,6 +28,17 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* top left name header */
+        .header-name {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 14px;
+            font-weight: bold;
+            z-index: 100;
+            pointer-events: none; /* ensures it doesn't block dragging */
+        }
+
         .desktop-container {
             width: 100%;
             height: calc(100% - 60px);
@@ -97,14 +108,16 @@
             text-decoration: underline;
         }
 
-        /* scattered positions */
-        #projects-icon { top: 12%; left: 3%; }
-        #resume-icon   { top: 28%; left: 12%; }
-        #about-icon    { top: 45%; left: 58%; }
-        #contact-icon  { top: 15%; left: 75%; }
+        /* scattered positions mimicking the oklama style */
+        #projects-icon { top: 15%; left: 5%; }
+        #resume-icon   { top: 32%; left: 15%; }
+        #about-icon    { top: 48%; left: 60%; }
+        #contact-icon  { top: 18%; left: 78%; }
     </style>
 </head>
 <body>
+
+    <div class="header-name">allie swarr</div>
 
     <div class="desktop-container">
         <div id="projects-icon" class="icon-wrapper draggable">
