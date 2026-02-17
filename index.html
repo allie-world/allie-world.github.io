@@ -49,20 +49,11 @@
         .icon-img { width: 75px; height: auto; margin-bottom: 8px; -webkit-user-drag: none; }
         .icon-label { font-size: 11px; text-align: center; font-weight: bold; }
 
-        /* UPDATED: Window styling for resizability */
         .window {
-            position: absolute; 
-            width: 320px; 
-            height: auto; /* allows it to scale with content initially */
-            min-width: 200px;
-            min-height: 150px;
-            background: var(--bg-color);
-            border: var(--border); 
-            display: none; 
-            flex-direction: column;
-            box-shadow: 4px 4px 0px #000; 
-            z-index: 500; 
-            touch-action: none;
+            position: absolute; width: 320px; min-width: 200px; min-height: 150px;
+            background: var(--bg-color); border: var(--border); 
+            display: none; flex-direction: column;
+            box-shadow: 4px 4px 0px #000; z-index: 500; touch-action: none;
         }
 
         .window-header {
@@ -74,14 +65,7 @@
         .close-btn { cursor: pointer; font-weight: bold; border: var(--border); padding: 0 5px; background: #eee; }
         .close-btn:hover { background: #ddd; }
 
-        /* Ensure content scrolls if window is small */
-        .window-content { 
-            padding: 15px; 
-            overflow-y: auto; 
-            flex-grow: 1; 
-            font-size: 13px; 
-            line-height: 1.5; 
-        }
+        .window-content { padding: 15px; overflow-y: auto; flex-grow: 1; font-size: 13px; line-height: 1.5; }
 
         .player-ui { text-align: center; }
         .now-playing { 
@@ -95,8 +79,7 @@
         
         .controls button { 
             cursor: pointer; border: var(--border); background: #fff;
-            padding: 5px 10px; font-family: inherit; font-size: 11px;
-            min-width: 45px;
+            padding: 5px 10px; font-family: inherit; font-size: 11px; min-width: 45px;
         }
         #play-pause-btn { min-width: 80px; font-weight: bold; }
 
@@ -112,12 +95,13 @@
         .footer a, .footer span { text-decoration: none; color: #000; font-size: 12px; font-weight: bold; }
         .footer a:hover { text-decoration: underline; }
 
-        #projects-icon { top: 10%; left: 5%; }
-        #resume-icon   { top: 28%; left: 8%; }
-        #linkedin-icon { top: 12%; left: 82%; }
-        #about-icon    { top: 45%; left: 45%; }
-        #contact-icon  { top: 60%; left: 80%; }
-        #jams-icon     { top: 68%; left: 10%; }
+        /* PIXEL POSITIONS: Prevents icons from moving off-screen on zoom */
+        #projects-icon { top: 80px;  left: 40px; }
+        #resume-icon   { top: 220px; left: 60px; }
+        #linkedin-icon { top: 80px;  left: 280px; }
+        #about-icon    { top: 320px; left: 240px; }
+        #contact-icon  { top: 480px; left: 300px; }
+        #jams-icon     { top: 520px; left: 80px; }
     </style>
 </head>
 <body>
@@ -216,14 +200,13 @@
             win.style.display = 'flex';
             win.style.zIndex = ++topZIndex;
             if (!win.style.top && !win.getAttribute('data-x')) {
-                win.style.top = '20%';
-                win.style.left = '20%';
+                win.style.top = '100px';
+                win.style.left = '100px';
             }
         }
 
         function closeWindow(id) { document.getElementById(id).style.display = 'none'; }
 
-        // MIDI Logic
         function playMidi(file, name) {
             MIDIjs.play(file);
             currentTrack = name;
@@ -238,10 +221,12 @@
                 MIDIjs.resume();
                 isPaused = false;
                 document.querySelector('#play-pause-btn').innerText = "pause";
+                document.querySelector('.now-playing').innerText = "now playing: " + currentTrack;
             } else {
                 MIDIjs.pause();
                 isPaused = true;
                 document.querySelector('#play-pause-btn').innerText = "play";
+                document.querySelector('.now-playing').innerText = "paused: " + currentTrack;
             }
         }
 
@@ -277,7 +262,6 @@
             });
         }
 
-        // Draggable Icons
         interact('.draggable').draggable({
             inertia: true,
             listeners: {
@@ -295,7 +279,6 @@
             }
         });
 
-        // UPDATED: Combined Drag & Resize for Windows
         interact('.resizable-window')
         .draggable({
             allowFrom: '.window-header',
@@ -318,13 +301,10 @@
                     var target = event.target;
                     var x = (parseFloat(target.getAttribute('data-x')) || 0);
                     var y = (parseFloat(target.getAttribute('data-y')) || 0);
-
                     target.style.width = event.rect.width + 'px';
                     target.style.height = event.rect.height + 'px';
-
                     x += event.deltaRect.left;
                     y += event.deltaRect.top;
-
                     target.style.transform = 'translate(' + x + 'px,' + y + 'px)';
                     target.setAttribute('data-x', x);
                     target.setAttribute('data-y', y);
